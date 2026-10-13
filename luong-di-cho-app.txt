@@ -1,0 +1,1118 @@
+0. Trang giới thiệu:
+
+1. Card Container chính (Main Card Area)
+Một Container / Card màu trắng với bo góc trên (BorderRadius.vertical(top: ...)).
+
+Header Tags / Floating Badges:
+
+Bố cục: Thường dựng bằng Stack với các widget Positioned hoặc tổ hợp Wrap / Row.
+
+Thành phần: Các Badge tính năng dạng Row gồm icon chấm tròn xanh (Container(shape: BoxShape.circle)) đi kèm Text ("Quản lý đa loại hình", "Quản lý không giới hạn", "Tự động hóa", "Đa thiết bị - Linh hoạt").
+
+Illustration & Floating Logo:
+
+Illustration: Image.asset hoặc SvgPicture hiển thị hình vẽ các tòa nhà và mặt trời.
+
+App Avatar/Badge: Container bo tròn dạng đĩa tròn viền xanh/trắng, bên trong chứa Image logo chữ "A" của Lozido, căn chính giữa mép dưới của hình minh họa (thường định vị bằng Stack + Alignment.bottomCenter).
+
+Welcome & Value Proposition (Khối nội dung giới thiệu):
+
+Dựng bằng Column với CrossAxisAlignment.center.
+
+Greeting Text: Text("Chào mừng đã đến với") (fontSize vừa, màu xám/đen).
+
+Title / App Name: Text("LOZIDO - Chủ nhà!") (fontWeight: FontWeight.bold, fontSize lớn).
+
+Subtitle / Description: Text("Giải pháp toàn diện để quản lý nhà cho thuê").
+
+Highlight Keywords: Text("Chuyên nghiệp - Tự động hóa - Tiết kiệm - Linh hoạt") (color: Colors.green, fontWeight: FontWeight.bold).
+
+Call to Action (CTA Button):
+
+ElevatedButton full-width với backgroundColor: Colors.green và bo góc (RoundedRectangleBorder).
+
+Nội dung: Row gồm Text("Bắt đầu quản lý") và Icon(Icons.chevron_right).
+
+onPressed: Điều hướng (Navigate/Push) sang màn hình LoginScreen hoặc AuthOptionsScreen.
+
+Background Decoration:
+
+Dải sóng lượn màu xanh lá ở góc đáy card (CustomPaint hoặc SvgPicture).
+
+2. Footer Section (Chân trang)
+Nằm ngoài Card chính, sát đáy màn hình (safeAreaBottom).
+
+Version & Copyright:
+
+Text (hoặc Row chứa Text): "Phiên bản: 2.0.1 - Copyright @ quanlytro.me" với TextStyle màu xám mờ (color: Colors.grey, cỡ chữ nhỏ).
+
+* Khi người dùng bấm vào Nội dung: Row gồm Text("Bắt đầu quản lý") và Icon(Icons.chevron_right). là sẽ được điều sang trang đăng nhập
+
+1. Trang đăng nhập
+
+II. Phần Thanh Tiêu đề (Navigation Bar)
+Phần này nằm ngay dưới Thanh trạng thái.
+
+Navigation Bar (Thanh điều hướng):
+
+UINavigationBar (UIKit) / NavigationStack with toolbar (SwiftUI).
+
+Thành phần:
+
+Back Button (Nút quay lại): Một UIBarButtonItem dạng hình ảnh (UIImageView/Button) có biểu tượng mũi tên trái. Chức năng: Pop màn hình hiện tại khỏi Navigation Stack.
+
+Screen Title (Tiêu đề màn hình): Một UILabel nằm giữa, hiển thị văn bản "Đăng nhập tài khoản". Thường là title property của UINavigationItem.
+
+III. Thân Màn hình (Main Content Area)
+Đây là khu vực chứa biểu trưng và form đăng nhập, thường được bao bọc trong một UIScrollView hoặc List để có thể cuộn được khi nội dung dài hoặc khi bàn phím xuất hiện.
+
+Logo & Branding Area:
+
+App Logo: Một UIImageView hiển thị biểu trưng chữ "A" màu xanh của Lozido.
+
+App Name & Slogan: Một hoặc nhiều UILabel hiển thị "LOZIDO" và "Quản lý NHÀ CHO THUÊ". Có thể được nhóm lại trong một UIStackView (hoặc VStack trong SwiftUI).
+
+Login Form (Container):
+
+Có thể được nhóm trong một UIView container hoặc UIStackView dọc để quản lý khoảng cách.
+
+Field 1: Số điện thoại
+
+Input Label: Một UILabel hiển thị "Số điện thoại *". Dấu * (màu đỏ) thường là một UILabel riêng được ghép vào hoặc một AttributedString.
+
+Input Text Field: Một UITextField (UIKit) / TextField (SwiftUI) cho người dùng nhập số điện thoại.
+
+Nó có placeholder text là "Nhập số điện thoại".
+
+Developer cần cấu hình keyboardType là .numberPad hoặc .phonePad cho widget này.
+
+Field 2: Mật khẩu
+
+Input Label: Một UILabel hiển thị "Mật khẩu *".
+
+Secure Text Field with Toggle (Ô nhập mật khẩu có nút ẩn/hiện):
+
+Cốt lõi là một UITextField / SecureField. Cần set isSecureTextEntry = true.
+
+Ở góc phải, có một Action Button (Right View) chứa một UIImageView biểu tượng con mắt bị gạch chéo (eye.slash trong SF Symbols). Chức năng: Toggle thuộc tính isSecureTextEntry để ẩn/hiện mật khẩu.
+
+Primary Action Button (Nút hành động chính):
+
+Một UIButton (UIKit) / Button (SwiftUI) được custom full width, background color xanh lá.
+
+Label: Một UILabel bên trong với text "Đăng nhập tài khoản".
+
+Function: touchUpInside event sẽ gọi API đăng nhập.
+
+Social Login Section (Phần đăng nhập bên thứ ba):
+
+Thường được nhóm trong một UIStackView (VStack) để quản lý spacing.
+
+Zalo Login Button:
+
+Một UIButton được custom, background color xanh dương.
+
+Nó chứa một UIImageView (logo Zalo) và một UILabel ("Đăng nhập với ZALO") được bố trí ngang (HStack).
+
+Apple Login Button:
+
+Một UIButton được custom, background color đen.
+
+Nó chứa một UIImageView (logo Apple) và một UILabel ("Đăng nhập bằng Apple"). Lưu ý: Có số "7:08" đè lên, đây có thể là lỗi đồ họa từ video hoặc ảnh chụp, không phải là một phần có chủ ý của UI.
+
+Action Link Section (Liên kết hành động):
+
+Một UIStackView ngang (HStack) chứa hai liên kết.
+
+Create Account Link: Một UIButton (hoặc UILabel có UITapGestureRecognizer) hiển thị "Tạo tài khoản" với thuộc tính gạch chân (Underline).
+
+Forgot Password Link: Một UIButton / UILabel tương tự hiển thị "Quên tài khoản ?".
+
+*Sẽ có những trường hợp sau:
++ trường hợp 1 là người đã từng đăng nhập ít nhất 1 lần nhưng vì quá 14 ngày or 1 tháng ko vào thì sẽ bị lock out ra 
+* nếu người dùng đã có tài khoản nhưng quên mật khẩu thì Forgot Password Link: Một UIButton / UILabel tương tự hiển thị "Quên tài khoản ?" bấm vào sẽ được đưua đến trang xác thực để lấy lại tài khoản
+
++trường hợp 2 là người dùng lần đầu tiên đến với app chưa đăng nhập bao giờ "bây h họ sẽ đăng nhập để dùng app"
+* chưa có tài khoản chọn  "Tạo tài khoản" sẽ được đưua sang trang  "Tạo tài khoản"
+
+khi đăng nhập thành công hiển thị cái TooBar ra thông báo cho người dùng.
+Nếu ko thành công cũng xuất ra TooBar báo là ko thành công 
+khi đăng nhập thành công sẽ dưa người dùng vào Đây là màn hình Empty State / Onboarding First-time User
+
+------------------------------------------------------------------------------------
+
+2. Đây là màn hình Empty State / Onboarding First-time User (màn hình hướng dẫn khởi tạo dữ liệu ban đầu khi tài khoản chưa có nhà/phòng nào để quản lý), nằm trong tab Trang chủ của ứng dụng.
+
+1. Top Illustration Area
+
+Illustration: Image.asset / SvgPicture hiển thị đồ họa các tòa nhà cao tầng.
+
+Bố cục thường nằm ở đỉnh màn hình hoặc dùng Stack để lồng vào nền phía sau Card.
+
+2. Main Card Container (Khung hướng dẫn màu xanh nhạt)
+Một Container / Card với color: Color(0xFFF3FAF4) (xanh mint nhạt) và bo góc (BorderRadius.circular(...)).
+
+Header Title & Subtitle:
+
+Dựng bằng Column (CrossAxisAlignment.center).
+
+Text("Đầu tiên hãy tạo nhà để quản lý"): Tiêu đề chính (fontWeight: FontWeight.bold, fontSize lớn).
+
+Text("Bạn có thể quản lý không giới hạn số tòa nhà & số phòng/giường/căn hộ."): Phụ đề mô tả (color: Colors.grey[700]).
+
+3. Excel Import Card (Card màu trắng bên trong)
+Một Container / Card màu trắng, bo góc, có đổ bóng nhẹ (BoxShadow) với biểu tượng nổi ở mép trên:
+
+Floating Icon: Một Container tròn viền xanh/trắng chứa biểu tượng Excel (Image.asset / SvgPicture), định vị bằng Stack hoặc Transform.translate để nằm đè lên mép trên của Card.
+
+Card Header:
+
+Text("Bắt đầu tạo nhà từ file excel") (fontWeight: FontWeight.bold).
+
+Text("Tạo nhanh hơn từ excel sẵn có của bạn") (subtitle xám mờ).
+
+Step-by-step List (Danh sách các bước):
+
+Dựng bằng Column với các item ngăn cách bởi Divider().
+
+Mỗi item là một ListTile hoặc Row:
+
+Bước 1: Leading: Icon tải xuống dạng tròn đen (Container(shape: BoxShape.circle) + Icon(Icons.download)). Title: "Tải xuống file excel mẫu". Subtitle: "Tải file mẫu từ LOZIDO".
+
+Bước 2: Leading: Icon chỉnh sửa (Icon(Icons.edit_note)). Title: "Nhập dữ liệu". Subtitle: "Nhập hoặc copy dữ liệu của bạn vào file excel mẫu".
+
+Bước 3: Leading: Icon tải lên (Icon(Icons.upload)). Title: "Tải lên file đã nhập". Subtitle: "Sau khi nhập dữ liệu xong kiểm tra bạn tải lên để hoàn thành".
+
+4. Action Buttons for Excel (Nút tác vụ Excel)
+Một Row chứa 2 nút dạng chia đều (Expanded):
+
+Download Template Button: OutlinedButton.icon (viền xanh lá, nền trắng, text xanh lá: "Tải xuống ex..." + icon Icons.download).
+
+Upload File Button: ElevatedButton.icon (nền xanh lá đậm, text trắng: "Tải lên file đã nh..." + icon Icons.upload).
+
+5. Section Divider (Phân cách phương thức tạo)
+
+Dựng bằng Row gồm: Expanded(child: Divider()), Text("Bắt đầu tạo nhà thủ công"), icon mũi tên chỉ xuống Icon(Icons.arrow_downward), và Expanded(child: Divider()).
+
+6. Manual Creation Buttons (Nút tác vụ thủ công)
+Một Row chứa 2 nút hành động:
+
+Guide Button: OutlinedButton (viền đỏ đậm, text đỏ: "Hướng dẫn" kèm icon Play đỏ Icons.play_arrow).
+
+Create House Button: ElevatedButton (nền xanh dương, text trắng: "Tạo mới nhà" kèm icon minh họa ngôi nhà/cây xanh).
+
+7. Bottom Navigation Bar (Thanh điều hướng đáy)
+Widget BottomNavigationBar cố định ở đáy gồm 4 tab (BottomNavigationBarItem):
+
+Tab 1 (Active): Icon Home/Bookmark có background tròn xanh mint nhạt (Container(shape: BoxShape.circle)), Label: "Trang chủ" (màu xanh lá).
+
+Tab 2: Icon giỏ hàng/túi xách (Icons.shopping_bag_outlined), Label: "Plus+".
+
+Tab 3: Icon chuông thông báo (Icons.notifications_none), Label: "Thông báo".
+
+Tab 4: Icon danh mục menu ô vuông (Icons.grid_view), Label: "Thêm".
+
+------------------------------------------------------------------------------------
+
+3. Form nhập liệu nhiều bước (Multi-step Form / Wizard) dùng để "Thêm mới nhà cho thuê".
+
+I. Navigation Bar (Thanh điều hướng đỉnh)
+Back Button: IconButton dạng hình tròn nền xám nhạt với icon mũi tên trái (Icons.arrow_back).
+
+Title: Text("Thêm mới nhà cho thuê") (fontSize: 18, fontWeight: FontWeight.bold).
+
+Action Button (Right): IconButton hình tròn chứa biểu tượng trợ giúp/hỏi chấm (Icons.help_outline).
+
+II. Section 1: Thông tin nhà cho thuê (Main Form Section)
+1. Section Header (Tiêu đề nhóm)
+Dựng bằng: Row hoặc ListTile nằm trên nền xám nhạt (Colors.grey[100]).
+
+Icon: Container bo góc màu xanh lá chứa ký tự thăng Text("#") hoặc icon Hash.
+
+Text Group (Column):
+
+Text("Thông tin nhà cho thuê") (fontWeight: FontWeight.bold).
+
+Text("Thông tin cơ bản tên, loại hình...") (color: Colors.grey).
+
+2. Selected Category Box (Hộp chọn loại hình)
+Dựng bằng: Container màu trắng, viền mỏng (Border.all), bo góc.
+
+Nội dung:
+
+Bên trái (Column): Text("Loại hình cho thuê *") (dấu sao đỏ) + Text("Nhà trọ") (FontWeight.bold).
+
+Bên phải: IconButton hình tròn xám chứa icon đóng (Icons.close) để hủy/chọn lại loại hình.
+
+3. Rental Type Selection Cards (Thẻ chọn mô hình cho thuê)
+Dựng bằng: Row chứa 2 thẻ tùy chọn dạng nút chọn (Selectable Cards) được bọc trong Expanded:
+
+Thẻ 1 (Active/Selected - Thuê theo phòng):
+
+Container bo góc có viền nét đứt (Dashed Border) màu xanh lá.
+
+Bên trong (Column): Image.asset (hình đồ họa cây kết nối phòng), Text("Thuê theo phòng") (FontWeight.bold), Text("Tính tiền thuê theo phòng").
+
+Thẻ 2 (Inactive - Thuê theo giường):
+
+Container bo góc có viền nét đứt màu xám nhạt.
+
+Bên trong (Column): Image.asset (hình đồ họa tòa nhà/giường), Text("Thuê theo giường"), Text("Tính tiền theo giường").
+
+4. Property Name Input Field (Ô nhập tên nhà trọ)
+Label: Text("Tên Nhà trọ *") (dấu * màu đỏ).
+
+Text Field Container: TextFormField với OutlinedInputBorder bo tròn:
+
+Hint/Placeholder: Text("Ví dụ: Nguyễn Thanh").
+
+Suffix Widget: Container bo góc nền xám nhạt chứa nhãn cố định Text("Nhà trọ").
+
+III. Section 2: Cách khởi tạo dữ liệu (Next Form Section)
+Divider / Section Background: Dải phân cách màu xám nhạt (Divider hoặc nền xám phân vùng).
+
+Section Header:
+
+Icon thăng Text("#") nền xanh lá tương tự Section 1.
+
+Text("Cách khởi tạo dữ liệu") + Text("Theo mẫu hoặc từ excel hoặc thủ công").
+
+Form Option Preview: Text("Đang khởi tạo tự động theo mẫu") (bị che một phần bởi thanh điều hướng đáy).
+
+IV. Bottom Action Bar & Step Progress (Thanh điều hướng & Tiến trình đáy)
+Được cố định ở đáy màn hình (thường đặt trong SafeArea + Container đổ bóng nhẹ):
+
+1. Step Progress Bar (Thanh chỉ báo bước)
+Dựng bằng: Row gồm 2 thanh LinearProgressIndicator (hoặc Container bo góc dài dạng thanh ngang) chia đều:
+
+Thanh 1 (Active): Màu xanh lá (đại diện cho bước 1 hiện tại).
+
+Thanh 2 (Inactive): Màu xám nhạt (đại diện cho bước tiếp theo).
+
+2. Action Buttons (Cặp nút điều hướng)
+Dựng bằng: Row với 2 nút chia đều bằng Expanded:
+
+Nút Đóng (Cancel/Back): ElevatedButton nền xám nhạt, text màu đen: "Đóng".
+
+Nút Tiếp theo (Primary CTA): ElevatedButton nền xanh lá, text màu trắng: "Tiếp theo".
+
+3. iOS Home Indicator
+Thanh vạch ngang màu đen nằm ở đáy cùng thuộc Safe Area của hệ thống iOS.
+
+
+Dưới góc độ Mobile Developer / System Flow, luồng này được thiết kế theo dạng Multi-step Form kết hợp Custom Pickers & Confirmation Dialog. Dưới đây là phân tích chi tiết từng bước theo đúng thứ tự logic và state của màn hình:🗺️ Sơ đồ tổng quan luồng (User Flow Overview)Plaintext[Ảnh 1: Form cơ bản] ──(Click chọn loại hình)──> [Ảnh 2: Modal chọn loại hình]
+        │
+        ▼ (Sau khi chọn loại hình & cuộn xuống)
+[Ảnh 3: Cấu hình phòng mẫu] ──(Click chọn số tầng)──> [Ảnh 4: Modal chọn số tầng]
+        │
+        ▼ (Sau khi chọn số tầng & nhập giá/diện tích)
+[Ảnh 5: Form hoàn chỉnh kèm gợi ý công thức]
+        │
+        ▼ (Nếu người dùng bấm tắt Switch "Khởi tạo tự động")
+[Ảnh 6: Dialog cảnh báo/xác nhận hủy khởi tạo theo mẫu]
+📱 Phân tích chi tiết từng bước trong luồng1. Bước 1: Khởi tạo thông tin cơ bản (image_d719e2.png)State / Mục đích: Màn hình ban đầu của Step 1. Lấy loại hình quản lý, mô hình thu tiền và tên nhà trọ.Các Widget chính:AppBar: Nút Back (Pop), Title "Thêm mới nhà cho thuê", Action Button Trợ giúp.Section Header: Container icon # + Text tiêu đề phân đoạn "Thông tin nhà cho thuê".Dropdown Selector Box: Hiển thị loại hình đang chọn ("Nhà trọ") kèm nút icon x để reset/chọn lại.Radio Card Grid (Row + Dashed Border): 2 Card chọn cách tính tiền: "Thuê theo phòng" (Active viền xanh) hoặc "Thuê theo giường" (Inactive).TextFormField: Ô nhập tên nhà trọ có suffixText: "Nhà trọ".Bottom Persistent Footer: Gồm LinearProgressIndicator (bước 1/2) và cặp nút ElevatedButton ("Đóng" / "Tiếp theo").2. Bước 2: Chọn loại hình cho thuê (image_d719f8.png)State / Mục đích: Modal Single-Choice Selection bật lên đè lên màn hình form (khi người dùng tương tác vào hộp chọn loại hình).Các Widget chính:ModalBarrier: Lớp overlay làm tối màn hình nền.Dialog / Center Dialog Box:Header: Icon Home tròn + Text "Loại hình cho thuê".ListView.separated: Danh sách lựa chọn đơn (Single Selection) gồm Nhà trọ (được check), Ký túc xá/sleepbox, Chung cư mini, Tòa nhà chung cư, Nhà nguyên căn, Văn phòng cho thuê. Item được chọn có trailing icon Checkmark tròn màu xanh.Footer Button: Nút "Đóng" (ElevatedButton màu xám full-width) để Navigator.pop(context).3. Bước 3: Cấu hình khởi tạo phòng mẫu tự động (image_d719fa.png)State / Mục đích: Section 2 - "Cách khởi tạo dữ liệu". Cho phép người dùng tạo nhanh hàng loạt phòng theo mẫu thông số chung để tiết kiệm thời gian.Các Widget chính:SwitchListTile: Nút bật/tắt (Toggle Switch màu xanh) cho tính năng "Đang khởi tạo tự động theo mẫu".Dropdown Selector Box: Thiết lập số tầng (mặc định đang là "Tầng trệt (không có tầng)").TextFormField (Số lượng): Nhập số lượng phòng (hậu tố p hoặc badge "phòng").Row chứa 2 TextFormField (Diện tích & Giá thuê):Ô Diện tích (m²): Có suffix badge "m2".Ô Giá thuê mẫu: Có suffix badge "đ/tháng".Text (Helper/Note): Dòng chú thích màu cam hướng dẫn việc sửa đổi từng phòng sau này.4. Bước 4: Modal chọn cấu trúc số tầng (image_d71a1d.png)State / Mục đích: Modal Selection Picker cho thuộc tính cấu trúc tòa nhà.Các Widget chính:Dialog:Header: Icon danh sách (Icons.list_alt) + Text "Thiết lập số tầng (Gồm tầng triệt)".ListView: Danh sách cuộn chọn số tầng từ Tầng trệt (không có tầng) đến 8 tầng (Gồm 1 trệt + 7 tầng). Item chọn có trailing Checkmark xanh.Nút "Đóng" đáy modal.5. Bước 5: Form hoàn thiện dữ liệu cấu hình (image_d71a98.png)State / Mục đích: Form đã điền đầy đủ các thông số khởi tạo hàng loạt: Nhà 3 tầng, 10 phòng, diện tích 15m², giá thuê 2.000.000 đ/tháng, tối đa 3 người/phòng.Các Widget chính:Dữ liệu các trường đã được format (Giá tiền có dấu chấm phân cách hàng nghìn 2.000.000).Dropdown Selector Box mới: "Tối đa người ở / phòng" (Chọn 3 người/ở).Dynamic Formula Label (Text màu cam/nâu): Nhãn tính toán động giải thích logic chia phòng cho hệ thống:$$\text{Số phòng trên 1 tầng} = \frac{\text{Tổng số phòng}}{\text{Số tầng}}$$6. Bước 6: Popup xác nhận thay đổi phương thức (image_d71d45.png)State / Mục đích: Confirmation Alert Dialog xuất hiện khi người dùng cố tình gạt tắt Switch "Đang khởi tạo tự động theo mẫu".Các Widget chính:AlertDialog:Icon cảnh báo: Container tròn viền cam chứa Icon(Icons.info_outline, color: Colors.orange).Title: Text("Thông báo xác nhận") (In đậm).Content: Text("Bạn muốn tắt chế độ khởi tạo phòng theo mẫu?").Actions (Row 2 nút):Nút phụ (Negative Action): ElevatedButton nền xám ("Đúng! excel/..." - chuyển sang phương thức tạo thủ công hoặc import excel).Nút chính (Positive/Dismiss Action): ElevatedButton nền xanh lá ("Vẫn theo mẫu" - giữ nguyên trạng thái Switch bật).
+
+
+
+Dưới đây là phân tích chi tiết kỹ thuật cho Bước 2 (Step 2) của luồng "Thêm mới nhà cho thuê" qua 8 hình ảnh bạn đã cung cấp, nối tiếp từ nút "Tiếp theo" ở bước 1 cho đến khi người dùng chuẩn bị nhấn nút "Lưu thông tin".🗺️ Sơ đồ tổng quan luồng Bước 2 (Step 2 Flow Overview)Plaintext[Ảnh 1: Cài đặt Dịch vụ] ──(Click chọn cách tính điện)──> [Ảnh 2: Modal chọn Dịch vụ điện]
+        │
+        ▼ (Cuộn xuống: Cấu hình Switch các tính năng)
+[Ảnh 3: Cài đặt tính năng 1] ──> [Ảnh 4: Cài đặt tính năng 2] ──> [Ảnh 5: Section Địa chỉ & Vị trí]
+                                                                          │
+                                     (Click "+ Thêm địa chỉ & vị trí") ────┘
+                                     │
+                                     ▼
+[Ảnh 6: Modal nhập địa chỉ hành chính (Loading / Trống)]
+        │
+        ▼ (Sau khi chọn Tỉnh/Huyện/Xã & Click "Lấy vị trí trên bản đồ")
+[Ảnh 7: Modal địa chỉ đã điền] ──> [Ảnh 8: Fullscreen Map Picker (GPS / Tọa độ)]
+                                            │
+               (Xác nhận vị trí & quay về màn hình chính) ◀───┘
+                                            │
+                                            ▼
+                        [Sẵn sàng nhấn: "Lưu thông tin"]
+📱 Phân tích chi tiết từng màn hình theo thứ tự1. Ảnh 1 (image_d73bc4.png): Cài đặt dịch vụ nhà trọState / Mục đích: Bắt đầu Step 2 (thanh tiến trình ở đáy đã nhảy sang vạch 2 màu xanh). Thu thập phương thức tính phí dịch vụ cơ bản.Các Widget chính:LinearProgressIndicator / Step Bar: Vạch 1 xám (đã hoàn thành), Vạch 2 xanh lá (đang kích hoạt).Section Header: Container icon # + Text "Cài đặt dịch vụ Nhà trọ" (subtitle: "Thiết lập các dịch vụ khách thuê sử d...").List of Selection Boxes (Dropdowns): Các ô chọn bo góc dạng thẻ màu trắng, có nút icon xóa x bên phải:Dịch vụ điện: Mặc định "Tính theo đồng hồ (phổ biến)" (đang được click).Dịch vụ nước: Mặc định "Tính theo đồng hồ (phổ biến)".Dịch vụ rác: Mặc định "Miễn phí tiền điện/không sử dụng".Dịch vụ internet/mạng: Mặc định "Miễn phí tiền điện/không sử dụng".Bottom Bar: Nút "Quay lại trước" (Outlined/Grey) và "Lưu thông tin" (ElevatedButton màu xanh).2. Ảnh 2 (image_d73bc7.png): Modal chọn phương thức tính tiền điệnState / Mục đích: Modal Single-Choice Selection được mở khi click vào ô "Dịch vụ điện".Các Widget chính:ModalBarrier: Làm tối giao diện phía sau.Dialog:Header: Icon sấm sét viền tròn + Text "Dịch vụ điện".ListView: Danh sách các Option:Miễn phí tiền điện/không sử dụngTính theo ngườiTính theo thángTính theo đồng hồ (phổ biến) (Đang chọn - Trailing Checkmark xanh)Footer: ElevatedButton full-width nút "Đóng".3. Ảnh 3 (image_d73be0.png): Cấu hình tính năng mở rộng (Phần 1)State / Mục đích: Section "Cài đặt tính năng" (Quản lý các module tiện ích thông qua danh sách Toggle Switch).Các Widget chính:Section Header: Icon # + Text "Cài đặt tính năng".Card Container chứa danh sách SwitchListTile:App dành riêng cho khách thuê: Leading avatar app, Switch ON (màu xanh), kèm text cam "Hoàn toàn miễn phí".Gửi hóa đơn tự động qua ZALO: Leading icon Zalo, Switch ON.Chức năng quản lý tài sản: Leading icon nội thất/tủ đồ, Switch ON.Chức năng quản lý xe: Leading icon xe máy, Switch ON.4. Ảnh 4 (image_d73be8.png): Cấu hình tính năng mở rộng (Phần 2)State / Mục đích: Cuộn tiếp danh sách Switch tính năng.Các Widget chính:SwitchListTile (tiếp tục):Tính năng đăng tin tiếp cận khách thuê: Leading icon đám mây upload, Switch ON.Hình ảnh, File chứng từ hợp đồng: Leading icon tài liệu/CCCD, Switch ON (đang có thao tác click).Quản lý môi giới: Leading icon nhóm người, Switch ON.5. Ảnh 5 (image_d73c01.png): Cấu hình tính năng (Phần 3) & Section Địa chỉState / Mục đích: Cuối danh sách tính năng và hiển thị nút mở cấu hình địa chỉ.Các Widget chính:SwitchListTile:Quản lý công việc: Leading icon clipboard, Switch ON.Gửi tin nhắn SMS tự động cho khách thuê: Leading icon tin nhắn xanh lá, Switch OFF (màu xám).Section Header: Icon # + Text "Địa chỉ & vị trí".OutlinedButton / Dashed Container: Nút "Thêm địa chỉ & vị trí trên bản đồ" kèm icon dấu cộng +.6. Ảnh 6 (image_d73c21.png): Modal nhập thông tin địa chỉ hành chính (Initial State)State / Mục đích: Modal Page / Form Sheet chọn địa chỉ phân cấp hành chính (Tỉnh/Thành $\rightarrow$ Quận/Huyện $\rightarrow$ Phường/Xã) và Số nhà.Các Widget chính:Modal Header: Nút đóng x, Title "Địa chỉ", Trailing Action "Tiếp tục >".Alert Banner (Container màu cam): Icon cảnh báo tam giác + Text "Thông tin: Nếu địa chỉ của bạn không có trong danh sách bên dưới...".Dropdown Selector Fields: Có indicator tải dữ liệu API dạng wave màu xanh lá (Đang tải...).TextFormField: Ô "Địa chỉ chi tiết" (Số nhà, hẻm, đường).Bottom Warning & Action: Text cam "Nhập thông tin đầy đủ để tiếp tục!" và nút ElevatedButton "Xác nhận địa chỉ & tiếp tục".7. Ảnh 7 (image_d73c24.png): Modal địa chỉ đã điền & Nút mở bản đồState / Mục đích: Người dùng đã chọn xong địa bàn hành chính: TP. Hồ Chí Minh $\rightarrow$ Quận Bình Thạnh $\rightarrow$ Phường 26 $\rightarrow$ Số nhà: 22.Các Widget chính:Các trường địa chỉ hiển thị dữ liệu đã chọn kèm icon x để reset.Location Helper Section:Text: Chú thích về lợi ích định vị vị trí nhà trọ trên bản đồ giúp tiếp cận khách thuê.OutlinedButton / FilledButton (Grey): Nút "Lấy vị trí trên bản đồ" kèm icon Icons.location_on.8. Ảnh 8 (image_d73c26.png): Map Picker (Chọn vị trí GPS trên bản đồ số)State / Mục đích: Màn hình/Modal chọn tọa độ chính xác của căn nhà thông qua bản đồ (Google Maps / Mapbox / OpenStreetMap).Các Widget chính:MapView Widget: Tích hợp bản đồ trực quan (hiển thị khu vực Hồ Con Rùa, các tuyến đường lân cận).Center Map Pin: Marker cố định ở tâm bản đồ (Icon mũi tên/ghim tròn màu xanh lá).Floating Coordinate Badge (Top Overlay): Container bo tròn màu trắng hiển thị tọa độ thực tế:$$\text{Latitude, Longitude} = (10.782913199999978, \, 106.69618980000003)$$Action Floating Button: Nút bo tròn "Lấy vị trí hiện tại" (kèm icon Icons.my_location để kích hoạt GPS).Bottom Action Buttons:Xác định vị trí (Primary CTA): ElevatedButton màu xanh lá (đang được click để lưu tọa độ và đóng Map Picker).Đóng: ElevatedButton màu cam (Hủy/Đóng map).🎯 Điểm chuyển giao: Sau khi nhấn "Lưu thông tin"Sau khi hoàn tất định vị ở Ảnh 8 và quay về màn hình chính, người dùng bấm nút Lưu thông tin:Controller/Bloc/State Management sẽ gom toàn bộ Payload của 2 bước (Thông tin loại hình, giá/diện tích/số phòng, cấu hình dịch vụ, thiết lập toggle features, địa chỉ chi tiết & Lat/Long).Thực thi gọi API POST /properties hoặc POST /houses/create để lưu trữ dữ liệu vào Backend.
+
+
+
+
+------------------------------------------------------------------------------------
+
+4. Màn hình Thành công & Hướng dẫn thao tác cốt lõi (Success & Post-onboarding Guidance Screen) sau khi người dùng bấm nút "Lưu thông tin" để hoàn tất luồng tạo nhà.
+
+🗺️ Cấu trúc & Bố cục tổng thểPlaintext[Header: Illustration đồ họa + Thông báo chúc mừng thành công]
+                           │
+                           ▼
+[Body: Card danh sách các tính năng cốt lõi kèm Link Video Hướng Dẫn]
+  ├── 1. Thiết lập dịch vụ
+  ├── 2. Tạo mới hợp đồng
+  ├── 3. Lập hóa đơn
+  ├── 4. Thu tiền hóa đơn
+  └── 5. Kết thúc hợp đồng
+                           │
+                           ▼
+[Bottom Bar: Cặp nút CTA (Xem toàn bộ hướng dẫn / Bắt đầu quản lý)]
+📱 Phân tích chi tiết từng phần theo chuyên ngành Mobile DevI. Phần Đỉnh & Chúc mừng thành công (Success Header Area - Ảnh 1)Illustration Graphic:Image.asset / SvgPicture: Hình minh họa 2 người làm việc bên bàn máy tính với biểu tượng bánh răng quy trình chuyển đổi số.Success Banner & Messages:Nhóm widget đặt trong Column căn giữa (CrossAxisAlignment.center).Success Title: Text("Tạo nhà cho thuê đầu tiên thành công!") (color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18 - 20).Congratulation Subtitle: Text("Chúc mừng bạn bước đầu đã chuyển đổi số & tự động hóa thành công!") (textAlign: TextAlign.center).Guide Prompt: Text("Làm quen với các thao tác cơ bản") (fontWeight: FontWeight.bold) + phụ đề mô tả bên dưới.II. Danh sách các nghiệp vụ cốt lõi (Feature Guidance Card - Ảnh 1, 2, 3)Toàn bộ danh sách được bọc trong một Card / Container bo góc (BorderRadius.circular(16)), viền mỏng màu xám nhạt (Border.all(color: Colors.grey.shade300)).Các item được xếp dọc và ngăn cách bằng Divider(height: 1, thickness: 0.5). Mỗi item là một Row hoặc ListTile tùy biến gồm:Leading Icon Box: Container(shape: BoxShape.circle, color: Colors.black) chứa Icon nét mảnh màu trắng ở tâm.Text Content (Column):Title: Text in đậm tên tính năng.Description: Text màu xám mô tả quy trình nghiệp vụ.Action Link (Row + InkWell): Nút liên kết xem video dạng text xanh lá có gạch chân + trailing icon: Text("Xem video") + Icon(Icons.chevron_right, color: Colors.green).Chi tiết 5 mục nghiệp vụ:STTNghiệp vụLeading IconMô tả hiển thịAction1Thiết lập dịch vụIcons.settings (Bánh răng)Thiết lập dịch vụ (điện, nước...), chỉnh sửa đơn giá trước khi quản lýXem video >2Tạo mới hợp đồngIcons.assignment_outlined (Bìa kẹp hồ sơ)Ghi nhận khách thuê phòng bằng thao tác "Lập hợp đồng mới"Xem video >3Lập hóa đơnIcons.receipt_long (Tờ hóa đơn)Thu tiền nhà/dịch vụ định kỳ qua thao tác "Lập hóa đơn" hoặc "Lập hóa đơn nhanh"Xem video >4Thu tiền hóa đơnIcons.attach_money (Ký hiệu tiền tệ $)Xác nhận đã thu tiền từ khách qua thao tác "Hóa đơn cần thu" & thu tiềnXem video >5Kết thúc hợp đồngIcons.exit_to_app (Mũi tên rời đi)Xử lý khi khách trả phòng/chuyển đi và kết thúc chu kỳ thuêXem video >III. Thanh tác vụ cố định ở đáy (Bottom Action Bar)Nằm cố định ở đáy màn hình, được bọc trong SafeArea để tránh bị cấn vạch điều hướng của iOS/Android:Bố cục: Một Row gồm 2 nút chia đều bằng Expanded (không có khoảng cách giữa hai nút):Nút Hướng dẫn toàn diện (Secondary/Guide CTA):ElevatedButton nền đỏ (color: Colors.red), không bo góc giữa.Nội dung (Row): Icon(Icons.play_circle_outline, color: Colors.white) + Text("Toàn bộ h...") (bị rút gọn text do padding) + Icon(Icons.chevron_right).Chức năng: Mở danh sách phát video hướng dẫn chi tiết / web view hướng dẫn.Nút Bắt đầu quản lý (Primary CTA):ElevatedButton nền xanh lá (color: Colors.green).Nội dung (Row): Icon(Icons.lightbulb_outline, color: Colors.yellow) (bóng đèn vàng) + Text("Bắt đầu quản lý") + Icon(Icons.chevron_right).Chức năng: Hoàn tất onboarding, điều hướng (Navigator.pushAndRemoveUntil) về màn hình Dashboard / Trang chủ chính để quản trị tòa nhà vừa tạo.
+khi người dùng bấm vào "Băt đầu quản lý"
+
+------------------------------------------------------------------------------------
+
+5. Màn hình Dashboard Quản trị chính (Home / Management Dashboard) của nhà trọ vừa tạo.
+
+🗺️ Bố cục tổng thể (Screen Architecture)Toàn bộ màn hình được dựng bằng Scaffold với nền xám nhạt (Colors.grey[100]), phần thân cuộn dọc qua SingleChildScrollView / ListView, và cố định đáy bằng một BottomNavigationBar tùy biến (Custom Navigation Bar).📱 Phân tích chi tiết từng khối UI1. Top Header Bar (Khung quản lý tòa nhà & Tác vụ nhanh)Một Container bo góc màu xanh lá đậm (Colors.green), bên trong dùng Row gồm 2 khối:Property Selector (Bên trái - Expanded):Leading: Container tròn màu trắng (BoxShape.circle) chứa Icon(Icons.home_outlined).Content (Column):Row: Text("Đang quản lý Nhà trọ") + Icon(Icons.keyboard_arrow_down) (Mở BottomSheet/Dialog để đổi giữa các toà nhà).Text("LOZIDO") (fontWeight: FontWeight.bold, fontSize: 16, text màu trắng).Quick Actions (Bên phải):QR Scanner Button: Container vuông bo góc màu xanh mint nhạt chứa icon quét mã QR (Icons.qr_code_scanner).Menu Drawer Button: Container vuông bo góc màu xanh mint nhạt chứa icon 3 dấu gạch ngang (Icons.menu).2. Segmented Mode Switcher (Thanh chuyển đổi chế độ xem)Một Container viền xanh/xám bo góc dạng Segmented Control / Toggle Buttons chia làm 2 tab:Tab "Quản Lý" (Active Tab):Nền xanh dương (color: Colors.blue), Text màu trắng (FontWeight.bold), Leading Icon sổ kiểm tra (Icons.assignment_turned_in).Tab "Tổng Quan" (Inactive Tab):Nền trắng, Text màu đen/xám, Leading Icon đồ thị tăng trưởng (Icons.trending_up).3. Section 1: Thao tác thường dùng (Quick Actions Grid)Header nhóm (Section Title)Dựng bằng Row với mainAxisAlignment: MainAxisAlignment.spaceBetween:Bên trái: Vạch kẻ xanh đứng (Vertical indicator bar) + Column (Text("Thao tác thường dùng") in đậm + Text("Thực hiện tác vụ nhanh để quản lý...") màu xám).Bên phải: IconButton hình tròn trợ giúp (Icons.help_outline).Grid Dashboard (Lưới 3 cột)Dựng bằng GridView.count(crossAxisCount: 3) hoặc các Row chứa 3 Card / Container màu trắng, bo góc, đổ bóng nhẹ:Vị tríTên chức năngIcon minh họaBadge / Trạng tháiHàng 1 - Cột 1Cọc giữ chỗIcon tờ tiền + bắt tayKhông có badgeHàng 1 - Cột 2Lập hợp đồng mớiIcon hồ sơ người thuê xoay vòngBadge cam số 10 (Biểu thị 10 phòng đang trống chờ lập HĐ)Hàng 1 - Cột 3Thanh lý (Trả phòng)Icon ngôi nhà + ngườiKhông có badgeHàng 2 - Cột 1Lập hóa đơnIcon máy tính bỏ túi trên tờ hóa đơnKhông có badgeHàng 2 - Cột 2Chốt & Lập hóa đơnIcon sổ tính toán chốt số điện nướcKhông có badgeHàng 2 - Cột 3Hóa đơn cần thu tiềnIcon tập hóa đơn + chồng tiền xuKhông có badge4. Section 2: Menu quản lý nhà trọ (Object Management Section)Header nhóm: Tương tự Section 1 (Vạch xanh đứng + Tiêu đề "Menu quản lý nhà trọ" + Subtitle "Quản lý đối tượng nghiệp vụ trong..." + Icon Trợ giúp).Grid Dashboard (Danh sách đối tượng):Card 1 (Danh sách phòng): Icon danh sách phòng kèm Badge cam 0/10 (0 phòng đã thuê trên tổng 10 phòng).Card 2 & 3: Các module quản trị dịch vụ/khách thuê khác (đang hiển thị dạng lưới tương tự).5. Bottom Navigation Bar (Thanh điều hướng đáy - 6 Tabs)Widget BottomNavigationBar hoặc Custom Footer Container cố định đáy, chia làm 6 mục điều hướng:Trang chủ (Active): Icon Home có nền tròn xanh mint (Container(shape: BoxShape.circle)), Label màu xanh lá.Công việc: Icon tài liệu kèm bút (Icons.assignment_outlined), Label màu xám.Tìm khách: Icon thư mục/người (Icons.folder_shared_outlined), Label màu xám.Plus+: Icon túi mua sắm (Icons.shopping_bag_outlined), Label màu xám.Thông báo: Icon chuông (Icons.notifications_none), Label màu xám.Thêm: Icon menu 4 ô vuông (Icons.grid_view), Label màu xám.
+
+
+
+------------------------------------------------------------------------------------
+
+6. Màn hình Trang chủ (Home Screen / Dashboard)
++ Tab "Quản Lý" (Tác vụ vận hành) và Tab "Tổng Quan" (Báo cáo số liệu & Tài chính).
+
+🗺️ Cấu trúc khung cố định (Permanent Shell Components)Các thành phần này luôn ghim ở đầu và đáy màn hình trên mọi trạng thái:Top Header Bar:Property Selector: Container xanh lá bo góc, icon ngôi nhà có Badge xanh số 2 (chỉ số lượng tòa nhà quản lý), menu dropdown đổi toà nhà đang quản lý (Icons.keyboard_arrow_down).Action Buttons: Nút biểu đồ biến động xanh (TrendingUp) và nút Menu Drawer 3 gạch (Icons.menu).Segmented Mode Switcher (Thanh chuyển Tab):ToggleButtons / Container bo góc chia đôi 50/50 giữa Quản Lý (icon check note) và Tổng Quan (icon biểu đồ).Bottom Navigation Bar (6 Tabs):Cố định ở đáy: Trang chủ (Active), Công việc, Tìm khách, Plus+, Thông báo, Thêm.📱 PHẦN 1: TAB "QUẢN LÝ" (Management View)(Bao gồm nội dung trong các ảnh image_f09a24, image_f0920a, image_f09268, image_f092e6)Tab này tổ chức theo dạng cuộn dọc (ListView) gồm các Section và Card chức năng sau:1. Section: Menu quản lý nhà trọ (image_f09a24)Bố cục dạng GridView.count(crossAxisCount: 3) gồm 9 thẻ module:Thẻ chức năngIcon minh họaThông tin trạng thái / BadgeQuản lý phòngDanh sách phòngBadge cam 0/10 (0 phòng thuê / 10 tổng phòng)Quản lý hóa đơnHóa đơn & Máy tínhQuản lý kỳ hóa đơnQuản lý dịch vụTờ phiếu & Bút chìThiết lập đơn giá điện/nướcQuản lý hợp đồngBiểu đồ hợp đồngDanh sách hợp đồng thuêQuản lý khách thuêThẻ liên hệ kháchDanh sách thông tin cư dânCài đặt APP khách thuêBắt tay & Tiền tệCấu hình app cho người thuêQuản lý tài sảnTúi xách & Chấm thanKiểm kê nội thất từng phòngCài đặt nhà trọTòa nhà & Bánh răngSửa thông tin nhà, tầngCài đặt hóa đơnTờ hóa đơn & Bánh răngMẫu in, chu kỳ thanh toán2. Feature Banner: Tài khoản ngân hàng / Auto Gạch nợ (image_f0920a)Widget: Card / Container màu trắng bo góc có viền mỏng.Thành phần:Badge: Container màu cam góc trên ghi chữ PRO.Visual: Image.asset hình thẻ thanh toán VISA / Thẻ ngân hàng.Nội dung: Tiêu đề "Tài khoản ngân hàng" + mô tả tính năng tự động gạch nợ hóa đơn khi khách quét mã QR VietQR.Action Buttons (Row):Nút phụ: OutlinedButton viền xanh "Tìm hiểu thêm" (kèm icon Icons.help_outline).Nút chính: ElevatedButton nền xanh lá "Quản lý tài kh..." (kèm icon Icons.chevron_right).3. Section: Thao tác khác (image_f0920a, image_f09268, image_f092e6)Danh sách dạng ListView với các thẻ bo góc màu trắng (ListTile custom), có trailing icon Icons.chevron_right:Khoản thu / chi & Tổng kết: Icon túi tiền/sổ thu chi $\rightarrow$ Báo cáo dòng tiền vào/ra ngoài tiền phòng.Lịch sử gửi ZALO: Leading icon logo Zalo $\rightarrow$ Theo dõi lịch sử tin nhắn hóa đơn tự động gửi qua Zalo ZNS/OA. Kèm link text xanh gạch chân: "Tìm hiểu gửi hóa đơn qua ZALO".Tổng kết dịch vụ khách sử dụng: Icon đồ thị xanh $\rightarrow$ Thống kê chỉ số tiêu thụ điện, nước, rác, wifi của toàn bộ toà nhà.Thông báo cho khách thuê: Icon chuông thông báo $\rightarrow$ Gửi thông báo đẩy hàng loạt (tăng giá, bảo trì, tạm trú...).Banner: Đăng tin cho thuê:Container viền cong bo góc chứa hình minh họa đám mây & hợp đồng.Text quảng bá: "Hơn 10.000+ khách thuê tiềm năng trên hệ thống LOZIDO".Cặp nút hành động:ElevatedButton (Xanh lá): Icon xe đẩy + "Lấp phòng tr...".ElevatedButton (Cam): Icon upload + "Tin đăng".📊 PHẦN 2: TAB "TỔNG QUAN" (Overview / Metrics View)(Bao gồm nội dung trong các ảnh image_f09629, image_f09668)Khi người dùng chuyển sang tab Tổng Quan (nút bên phải chuyển sang màu xanh dương), giao diện tập trung hoàn toàn vào Dashboard số liệu & Thống kê thời gian thực:1. Metric Grid Cards (Lưới chỉ số vận hành phòng - image_f09629)Bố cục dạng GridView.count(crossAxisCount: 2) hiển thị các KPI vận hành:Tên thẻ KPILeading IconChỉ số & Tỷ lệTrailing ActionSố phòng báo kết thúc hợp đồngIcon thùng rác/hộp màu vàng00%Số phòng quá hạn hợp đồngIcon đồng hồ màu đen00%Số phòng đang nợ tiềnIcon đồng đô la xanh lá00%Số phòng đang cọc giữ chỗIcon mỏ neo xanh biển00%2. Promo / Connection Banner: Kết nối App Khách thuê (image_f09629, image_f09668)Widget: Container nền màu cam pastel nhạt.Nội dung:Text: "Có 0 hợp đồng đang kết nối".Text: Mô tả tính năng báo hóa đơn, thanh toán online tự động khi khách cài app.CTA Tag: Container màu cam đậm: "Giảm 10% phí khi trên 50% kết nối".Visual: Image.asset túi mua sắm giảm giá %.3. Section: Thống kê tài chính (image_f09668)Header: Vạch kẻ đứng màu xanh lá + Title "Thống kê tài chính" (subtitle: "Thống kê các loại tiền bạn đang quản lý").Danh sách thẻ tài chính (Column):Số tiền khách nợ: Icon tròn đỏ chữ $ $\rightarrow$ Hiển thị 0 đ.Số tiền cọc: Icon tròn xám chữ $ $\rightarrow$ Hiển thị 0 đ.Số tiền khách cọc giữ chỗ: Icon tròn xanh lá chữ $ $\rightarrow$ Hiển thị 0 đ.
+
+------------------------------------------------------------------------------------
+
+7. luồng quản lý và tạo phòng thuộc module "Danh sách phòng / Quản lý phòng" qua 8 hình ảnh theo đúng thứ tự tương tác
+
+🗺️ Sơ đồ luồng tính năng (Feature Workflow)
+Plaintext
+[Ảnh 1: Danh sách phòng] ──(Click Icon Bánh răng Tab)──> [Ảnh 2: Màn hình Gom nhóm (ReorderableList)]
+        │                                                              │
+        │                                                     (Click Icon Bút chì) ──> [Ảnh 3: Modal Đổi tên nhóm]
+        │
+        ├──(Click Icon Lọc trên AppBar)──> [Ảnh 4: BottomSheet Lọc] ──> [Ảnh 5: Modal Chọn trạng thái phòng]
+        │
+        └──(Click Nút FAB + Thêm phòng)──> [Ảnh 6: Form Thêm phòng] ──> [Ảnh 7: Form đã điền + Section Dịch vụ]
+                                                                                       │
+                                                                           (Click "+ Dịch vụ") ──> [Ảnh 8 & 9: Màn hình Gán dịch vụ phòng]
+📱 Phân tích chi tiết từng màn hình theo chuẩn Mobile Dev
+1. Màn hình Danh sách phòng (image_f09e42.png)
+AppBar:
+
+Leading: Nút Back (IconButton).
+
+Title & Subtitle: Column chứa Text("Danh sách phòng") (Bold) và Text("Nhà trọ Ngọc Anh") (Italic/Grey).
+
+Actions: Icon Trợ giúp (Icons.help_outline) và Icon Bộ lọc (Icons.filter_list).
+
+Tab Bar (Nhóm tầng/khu):
+
+Leading Button: IconButton icon Bánh răng cài đặt có Badge xanh số 3 (đại diện 3 nhóm tầng).
+
+TabBar / ListView ngang: Các Tab dạng Pill có chỉ số đếm: "Tất cả (12)" (Active gạch chân xanh), "Tầng trệt (4)", "Tầng 1...".
+
+Danh sách phòng (ListView.builder):
+
+Mỗi item là một Card bo góc có dải màu phân loại trạng thái ở mép trái (Border(left: BorderSide(...))):
+
+Màu cam: Phòng trống / Chưa thu tiền.
+
+Màu xanh lá: Phòng đang ở / Đã thanh toán / Chờ kỳ thu tới.
+
+Thành phần trên Card:
+
+Header: Text("Phòng 1") (Bold) + UID góc phải Text("#UID: N1535R22958").
+
+Body (Row): Icon nhà trọ mini + Column (Text("Giá thuê") + Text("3.500.000 đ") in đậm) + Chỉ số cư dân (Icon(Icons.person) + Text("1/1 người")).
+
+Badges / Status Chips (Row): Chip tròn trạng thái ("Đang trống", "Đang ở", "Chưa thể thu tiền", "Chờ kỳ thu tới").
+
+FAB (FloatingActionButton): Nút tròn màu xanh lá cố định góc dưới bên phải với Icon(Icons.add).
+
+2. Quản lý gom nhóm tầng/khu (image_f0a12b.png)
+State / Mục đích: Màn hình cấu hình và sắp xếp lại thứ tự các tầng/dãy/khu.
+
+Các Widget chính:
+
+ReorderableListView: Danh sách hỗ trợ kéo thả đổi vị trí.
+
+Leading: Container xám chứa icon 2 gạch kéo thả (Icons.drag_handle).
+
+Title: Tên nhóm ("Tầng trệt", "Tầng 1", "Tầng 2").
+
+Trailing: IconButton hình tròn icon bút chì (Icons.edit) để mở form sửa tên.
+
+FAB (FloatingActionButton): Nút + màu xanh thêm nhóm mới.
+
+Helper Text: Dòng chú thích cam "Chú ý: Nhấp giữ sau đó kéo thả để sắp xếp thứ tự của nhóm".
+
+Bottom CTA: ElevatedButton full-width "Lưu thay đổi".
+
+3. Modal Chỉnh sửa tên nhóm (image_f0a14f.png)
+State / Mục đích: Center Dialog / Modal Input đổi tên tầng/khu (ví dụ: đổi từ Tầng thành Khu A/B/C).
+
+Các Widget chính:
+
+Header: Icon ô vuông nhóm (Icons.dashboard_customize) + Text("Chỉnh sửa nhóm").
+
+TextFormField: Label "Tên nhóm *", text đang nhập "Khu".
+
+Keyboard Focus: Tự động kích hoạt bàn phím hệ thống.
+
+Cặp nút: ElevatedButton "Đóng" (Xám) và "Lưu nhóm" (Xanh lá).
+
+4. BottomSheet Bộ lọc phòng (image_f0a1eb.png)
+State / Mục đích: Modal Bottom Sheet xuất hiện từ mép dưới khi bấm icon Filter trên AppBar.
+
+Các Widget chính:
+
+ModalBottomSheet:
+
+Drag Handle: Thanh gạch xám nhỏ ở mép trên.
+
+Header (Row): Icon Filter + Text("Lọc danh sách phòng") + Nút đóng x.
+
+Filter Selectors (Row 2 cột):
+
+Cột 1: Dropdown chọn "Trạng thái phòng".
+
+Cột 2: Dropdown chọn "Trạng thái hoạt độ...".
+
+5. Modal Chọn trạng thái phòng (image_f0a229.png)
+State / Mục đích: Center Dialog Picker chọn giá trị lọc theo trạng thái thuê.
+
+Các Widget chính:
+
+Header: Icon danh sách + Text("Trạng thái phòng").
+
+ListView (Single Choice):
+
+Phòng/giường/căn hộ trống (Chấm cam)
+
+Đang cọc giữ chỗ (Chấm cam)
+
+Đang ở (Chấm xanh)
+
+Đang báo kết thúc hợp đồng (Chấm cam)
+
+Đang báo kết thúc hợp đồng và có giữ chỗ (Chấm cam)
+
+Nút "Đóng".
+
+6 & 7. Form Thêm phòng mới (image_f0a4f1.png & image_f0a565.png)
+State / Mục đích: Màn hình Form tạo thêm một phòng đơn lẻ vào tòa nhà.
+
+Các Widget chính:
+
+Card 1 - Định danh & Nhóm:
+
+TextFormField: "Tên phòng trọ *" (Placeholder: "Ví dụ: Phòng số 1", Subtitle: "PO01, PO02").
+
+DropdownSelector: "Nhóm (Tầng/dãy/khu) *" (Đã chọn: "Khu C").
+
+Card 2 - Thông số tài chính & Chu kỳ:
+
+TextFormField Diện tích: Suffix badge m2 (Giá trị: 15).
+
+TextFormField Giá thuê: Suffix badge đ/tháng (Giá trị: 3.500.000).
+
+TextFormField Ngày lập hóa đơn: Mặc định 1 (Ngày 1 hàng tháng hệ thống tự động chốt).
+
+DropdownSelector Ưu tiên người thuê: Đã chọn "Ưu tiên nữ".
+
+Card 3 - Dịch vụ sử dụng:
+
+Header: Text("Dịch vụ sử dụng") + Trailing IconButton dấu cộng tròn + để thêm dịch vụ.
+
+Empty State: Text("Hiện chưa có dịch vụ nào được áp dụng...") (Khi chưa gán dịch vụ).
+
+Bottom Persistent Footer: Cặp nút "Đóng" (Xám) và "+ Thêm phòng" (Xanh lá).
+
+8 & 9. Gán dịch vụ cho phòng (image_f0a5c3.png & image_f0a892.png)
+State / Mục đích: Màn hình cấu hình danh mục các loại phí và chỉ số bắt đầu áp dụng cho phòng vừa tạo.
+
+Các Widget chính (ListView chứa các Card dịch vụ):
+
+Card Tiền điện:
+
+Checkbox (Checked màu xanh).
+
+TextFormField nhập chỉ số ban đầu: Ô giá trị 0 kèm suffix badge "Chỉ số hiện tại".
+
+Text đơn giá: "Đơn giá: 3.500 đ/KWh".
+
+Card Tiền nước:
+
+Checkbox (Chuyển từ Unchecked sang Checked).
+
+TextFormField nhập chỉ số đồng hồ nước ban đầu: Ô giá trị 0 kèm suffix badge "Chỉ số hiện tại".
+
+Text đơn giá: "Đơn giá: 18.000 đ/Khối".
+
+Card Tiền Wifi & Tiền Rác (Dịch vụ cố định theo tháng):
+
+Checkbox (Checked).
+
+TextFormField số lượng: Giá trị 1 kèm suffix badge "Tháng".
+
+Text đơn giá: 50.000 đ/Tháng (Wifi) và 20.000 đ/Tháng (Rác).
+
+Bottom Footer: Cặp nút "Đóng" và "Áp dụng dịch vụ" (ElevatedButton xanh lá để lưu cấu hình dịch vụ vào form phòng).
+
+------------------------------------------------------------------------------------
+
+8.1. Chi tiết phòng" (Room Detail Screen) gồm 4 Tab chính: THÔNG TIN, HÓA ĐƠN, VIỆC CẦN LÀM, và LỊCH SỬ.
+
+Cấu trúc khung điều hướng chung (AppBar & TabBar)AppBar:Leading: IconButton mũi tên quay lại (Icons.arrow_back).Title & Subtitle: Column chứa Text("Chi tiết phòng") (Bold) và Text("Phòng 4 - #22961") (Mã định danh phòng/UID).Action: IconButton hình tròn trợ giúp (Icons.help_outline).TabBar (Scrollable TabBar / DefaultTabController):Gồm 4 tab: THÔNG TIN, HÓA ĐƠN, VIỆC CẦN LÀM, LỊCH SỬ.Tab được chọn có gạch chân màu xanh lá (indicatorColor: Colors.green, labelColor: Colors.black, fontWeight: FontWeight.bold).Tab 1: THÔNG TIN (Room Overview & Config - image_f0acc9.png)Toàn bộ nội dung cuộn dọc qua SingleChildScrollView / ListView:Card Mã kết nối App khách thuê:Container màu xanh mint nhạt, bo góc.Header: Text("Mã kết nối phòng - Dành cho app khách t...") + Trailing IconButton trợ giúp.Connection Code Row:Mã code: Text("C5067P22961") màu xanh lá in đậm.Nút Sao chép: OutlinedButton.icon (Icon Icons.copy + Text "Sao chép").Nút Chia sẻ: OutlinedButton.icon (Icon Icons.share + Text "Chia sẻ").Card Trạng thái & Tài chính nhanh:Status Chips: Chip "Đang ở" (Chấm xanh) và "Chưa thu tiền" (Chấm cam).Debt Alert Banner: Container nền cam nhạt, Leading Icon chuông cam (Icons.notifications_active) + Column (Text("Tổng số tiền khách thuê đang nợ là:") + Text("3.924.000 đ") màu đen đậm, cỡ chữ lớn).CTA Button: ElevatedButton nền xám nhạt full-width, icon kẹp hồ sơ + Text("Xem thông tin hợp đồng").Card Thông tin phòng:Header: Text("Thông tin phòng") + Subtitle xám + Trailing IconButton bút chì (Icons.edit) để chỉnh sửa thông tin.2-Column Grid (GridView / Row) chứa các ô thuộc tính:Tên phòng: Phòng 4 | Nhóm: Khu AGiá thuê: 3.500.000 đ | Diện tích: 15 m2Giới tính ưu tiên: Tất cả | Ngày lập hóa đơn: Ngày 1 (Text cam)Card Dịch vụ của phòng đang sử dụng (Preview đáy):Text("Dịch vụ của phòng đang sử dụng") + mô tả danh mục phí dịch vụ áp dụng riêng cho phòng này.Tab 2: HÓA ĐƠN (Invoices List - image_f0ace8.png)Danh sách các kỳ hóa đơn phát sinh của phòng (ListView.builder):Invoice Item Card:Container màu trắng bo góc, viền xám nhẹ.Top Row:Leading Badge: Container bo góc màu cam hiển thị chu kỳ T.3 / 2023 (Tháng 3/2023).Middle Info: Text("Phòng 4 (07/03/2023)") in đậm + Subtitle "Thu tiền hàng tháng".Status Chips: "Chưa thu" (Chấm cam) và "Chưa gửi phiếu" (Chấm cam).Trailing Button: FilledButton màu xám nhạt (Row: Text("Chi tiết") + Icon(Icons.arrow_forward)).Divider: Đường kẻ mỏng phân cách.Financial Summary Row (3 cột):Cột 1: Text("Tổng số") $\rightarrow$ Text("3.924.000 đ").Cột 2: Text("Đã trả") $\rightarrow$ Text("0 đ").Cột 3: Text("Còn lại") $\rightarrow$ Text("= 3.924.000 đ") (Màu đỏ in đậm).Tab 3: VIỆC CẦN LÀM (Tasks / Maintenance - image_f0ad0a.png)Quản lý sự cố, bảo trì và nhắc việc riêng của phòng:Task Card:Container nền trắng, bo góc, có vạch cảnh báo màu đỏ ở mép trái (Border(left: BorderSide(color: Colors.red, width: 4))).Title: Text("Sửa bóng đèn") in đậm.Trailing: IconButton 3 chấm dọc (Icons.more_vert) để thao tác sửa/xóa task.Meta Row: Icon đồng hồ + Text("07/03/2023") + VerticalDivider + Status Chip cam "Chưa hoàn thành".FloatingActionButton (FAB): Nút tròn màu xanh lá (Icons.add) ở góc phải dưới để thêm công việc mới.Tab 4: LỊCH SỬ (Activity Log / Audit Trail - image_f0ad2c.png)Theo dõi lịch sử tương tác và thay đổi trạng thái của phòng:Empty State View:Container tròn màu xám/trắng chứa Icon(Icons.history, color: Colors.green) kích thước lớn.Text("Hiện tại chưa có lịch sử nào được ghi nhận") (fontWeight: FontWeight.bold, fontSize: 16, căn giữa).Feature Guide Card (Card hướng dẫn bên dưới):Container màu trắng bo góc, padding đều.Title: Text("Bạn có thể khám phá được gì ở chức năng này ?") in đậm.Description: Mô tả tính năng ghi log hoạt động (Lập hợp đồng, chốt điện nước, đổi trạng thái phòng...).
+
+
+8.2. Tab "THÔNG TIN" của màn hình Chi tiết phòng:
+
+🗺️ Sơ đồ cấu trúc & Luồng tương tác (Tab Thông Tin)Plaintext[Tab THÔNG TIN (Toàn cảnh)]
+  ├── (1) Khối Thông tin cơ bản ──(Click Icon Sửa)──> [Màn hình Chỉnh sửa thông tin phòng]
+  ├── (2) Khối Dịch vụ phòng đang sử dụng (Điện, Nước, Wifi, Rác)
+  ├── (3) Khối Danh sách khách thuê
+  │       ├── (Click Menu 3 chấm) ──> [PopupMenu: Chỉnh sửa / Xóa / Đóng]
+  │       └── (Click "Khách tự nhập") ──> [Màn hình Bật/Tắt Link tự nhập CCCD & Thông tin]
+  ├── (4) Khối Quản lý phương tiện ──(Click "+ Thêm phương tiện") ──> [Màn hình Thêm xe & Ảnh]
+  └── (5) Nút Nguy hiểm (Danger Zone) ──> [Nút Xóa phòng]
+📱 Phân tích chi tiết từng khối giao diện & Màn hình con1. Section: Thông tin phòng & Chỉnh sửa (image_f106c3.png & image_f10741.png)Giao diện hiển thị (View Mode):Header: Text("Thông tin phòng") + Trailing IconButton hình tròn icon Bút chì (Icons.edit).2-Column Attribute Grid: Lưới 2 cột hiển thị các thuộc tính dạng cặp Key-Value bo góc trắng:Tên phòng: Phòng 4 | Nhóm: Khu AGiá thuê: 3.500.000 đ | Diện tích: 15 m2Giới tính ưu tiên: Tất cả | Ngày lập hóa đơn: Ngày 1 (Highlight cam).Màn hình Chỉnh sửa (image_f10741.png):Mở qua Navigator.push() khi bấm nút Bút chì.TextFormField: Tên phòng, Diện tích phòng, Ngày lập hóa đơn.Dropdown Selector: Nhóm tầng/khu và Giới tính ưu tiên (kèm nút icon x xóa nhanh).Trường Giá thuê (Disabled / Read-only): Ô giá thuê bị khóa mờ (readOnly: true) kèm dòng cảnh báo nghiệp vụ màu cam: "Phòng đang có hợp đồng. Chỉnh sửa hợp đồng để thay đổi giá phòng".Bottom CTA: ElevatedButton full-width icon Bút chì + "Lưu thông tin".2. Section: Dịch vụ của phòng đang sử dụng (image_f106c3.png & image_f1073e.png)Hiển thị danh sách dịch vụ đang tính phí riêng cho phòng này dạng bảng thẻ:Tiêu đề bảng: Row gồm Text("Tên & giá dịch vụ") (bên trái) và Text("Chỉ số sử dụng") (bên phải).Card Danh sách dịch vụ:Tiền điện: Đơn giá 3.500 đ/1 KWh $\rightarrow$ Suffix Badge xanh nhạt: Số hiện tại: 25170799.Tiền nước: Đơn giá 18.000 đ/1 Khối $\rightarrow$ Suffix Badge xanh nhạt: Số hiện tại: 21459.Tiền wifi: Đơn giá 50.000 đ/1 Tháng $\rightarrow$ Suffix Badge xám: 1 Tháng.Tiền rác: Đơn giá 20.000 đ/1 Tháng $\rightarrow$ Suffix Badge xám: 1 Tháng.3. Section: Danh sách khách thuê & Luồng tự nhập (image_f1073e.png, image_f10763.png, image_f10a6c.png, image_f10ac3.png)Thẻ thông tin khách thuê (Tenant Item Card):Leading: Avatar tròn mặc định (Icons.account_circle).Title: Text("Nguyễn Minh Thư") in đậm.Role Chips (Row): Chip xanh lá "Người liên hệ" (icon person) và "Đại diện hợp đồng" (icon check).ID / Contact Badges: Badge xanh nhạt Text("#SĐT: 0349-494-642") và Badge cam nhạt Text("#ID: 987412580").Trailing Action: PopupMenuButton 3 chấm dọc mở popup 3 tùy chọn: Chỉnh sửa, Xóa, Đóng.Nút Tự nhập thông tin: Link icon liên kết Text("Khách tự nhập...").Màn hình "Bật/Tắt tự nhập thông tin" (Tenant Self-Registration Link):Graphic: Illustration người ngồi bàn làm việc.Status Text: Text("(Phòng 4) Đã ghi nhận 1/1 thành viên").SwitchListTile: Toggle "Bật/tắt đường dẫn".Khi Tắt (OFF - image_f10a6c.png): Hiển thị text cam yêu cầu bật link để khách nhập.Khi Bật (ON - image_f10ac3.png):Copyable URL Box: Container viền xám chứa URL rút gọn + Icon Icons.copy sao chép vào clipboard.Note Text: Dòng cam thông báo "Đường dẫn chỉ có giá trị trong 12 giờ...".CTA Button: ElevatedButton xanh lá icon share "Chia sẻ đường dẫn".Privacy Disclaimer: Đoạn text cam kết bảo mật thông tin cá nhân/CCCD của khách.4. Section: Quản lý phương tiện (image_f10763.png & image_f10def.png)Trạng thái phòng (Empty State):Icon xe đạp/xe máy kích thước lớn ở giữa + Text("Chưa có phương tiện nào được thêm...").Nút OutlinedButton viền tròn icon + Text("Thêm phương tiện").Màn hình Thêm phương tiện (image_f10def.png):TextFormField: "Tên xe *" (Placeholder: "Ví dụ: Wave alpha").TextFormField: "Biển số xe *" (Placeholder: "Ví dụ: 93B - 12345").Image Uploader Box:Icon hình ảnh + Text giới hạn "Tối đa bạn chỉ thêm được 4 hình ảnh".Cặp nút thao tác: OutlinedButton "Chụp hình" (icon camera) và "Thêm từ thư viện" (icon plus).5. Nút Xóa phòng (Danger Action Button - image_f10763.png)Widget: ElevatedButton full-width màu đỏ tươi (backgroundColor: Colors.red).Content: Icon thùng rác (Icons.delete_outline) + Text("Xóa phòng").Logic xử lý: Thường kích hoạt AlertDialog cảnh báo xác nhận xóa vĩnh viễn dữ liệu phòng khỏi tòa nhà.
+
+------------------------------------------------------------------------------------
+
+9. Thu / chi & Tổng kết" 
+
+🗺️ Sơ đồ luồng chu trình Cọc giữ chỗ & Dòng tiềnPlaintext[1. Danh sách chọn phòng cọc] ──(Chọn Phòng 2)──> [2. Form Đặt cọc giữ chỗ (+1.000.000đ)]
+                                                             │
+                                                             ▼ (Hệ thống tự tạo phiếu Thu)
+[4. Chi tiết phiếu Thu cọc] ◀──(Xem chi tiết)── [3. Dashboard Thu/chi: Ghi nhận +1.000.000đ]
+        │
+        ▼ (Khách không thuê nữa / Hủy cọc)
+[5. Màn hình Thông tin cọc] ──(Bấm "Bỏ cọc giữ chỗ")──> [6. Dialog Nhập số tiền hoàn lại]
+                                                                     │
+                                                                     ▼ (Xác nhận hủy)
+                                              [7. Dashboard Thu/chi: Ghi nhận Khoản chi hoàn cọc]
+📱 Phân tích chi tiết từng màn hình theo chuẩn Mobile Dev1. Danh sách có thể "Cọc giữ chỗ" (image_f11280.png)State / Mục đích: Màn hình lọc và chỉ hiển thị các phòng có trạng thái Đang trống để chủ nhà chọn phòng thực hiện cọc.Các Widget chính:AppBar: Leading icon danh sách tròn + Title "Danh sách có thể 'Cọc giữ chỗ'" (subtitle: "Chọn 1 phòng để thực hiện"), trailing nút đóng x.TabBar: Lọc nhanh theo tầng (Tất cả, Tầng trệt, Tầng 1, Tầng 2).ListView.builder: Danh sách các Card phòng có viền cam bên trái (phòng trống).Bottom Persistent Button: ElevatedButton full-width màu cam "Đóng thao tác".2. Form Đặt cọc giữ chỗ (image_f112a7.png)State / Mục đích: Thu thập thông tin khách đặt cọc và số tiền cọc cho Phòng 2 - #22959.Các Widget chính:Top Row (Date Pickers): 2 ô chọn ngày (Custom Date Picker Card có nút xóa x):Ngày cọc giữ chỗ: 28/02/2023.Ngày dự kiến vào ở: 28/02/2023.TextFormField:Tên người cọc * (Ví dụ nhập: "Nguyễn Thu Hà").Số điện thoại * (Bàn phím số keyboardType: TextInputType.phone).TextFormField (Số tiền cọc): Ô nhập giá trị có suffix badge đ (Nhập: 1.000.000).Info Box (Container xanh mint nhạt): Hiển thị tham chiếu giá thuê phòng hiện tại ("Giá thuê hiện tại: 3.000.000 đ").TextFormField: Ghi chú thêm.Bottom Button: ElevatedButton xanh lá full-width "Thêm cọc giữ chỗ".3. Dashboard Thu / chi & Tổng kết: Ghi nhận cọc (image_f115eb.png)State / Mục đích: Khi lưu cọc thành công ở bước 2, hệ thống tự động sinh 1 bản ghi Khoản thu (tiền vào) trong module Sổ quỹ.Các Widget chính:AppBar: Title "Thu / chi & Tổng kết", trailing icon Bánh răng cài đặt (Icons.settings).Filter Header Bar:Filter tháng: Chip viền xanh "Tháng 2, 2023" (kèm nút x).Filter danh mục: Dropdown "Danh mục thu/chi".Financial Summary Card:Row: Khoản thu (tiền vào) $\rightarrow$ + 1.000.000 đ (Màu đen/xanh).Row: Khoản chi (tiền ra) $\rightarrow$ - 0 đ (Màu cam).Divider + Row: Lợi nhuận $\rightarrow$ 1.000.000 đ (Màu xanh lá đậm).Daily Group List (ListView):Header nhóm ngày: Avatar tròn số 28 + Text "Thứ ba, Tháng 2/2023" + Tổng cộng 1.000.000 đ.Transaction Item Card:Leading: Container xám chứa icon Thẻ giá (Icons.local_offer).Content: Title "Thu cọc giữ chỗ", Subtitle "Thu cọc giữ chỗ của khách thuê Nguyễn Thu Hà cho Phòng 2 vào ngày 28/2".Trailing: Số tiền +1.000.000 đ (Xanh lá) + Chip hình thức "Tiền mặt".FAB: Nút tròn xanh lá dấu + để tạo phiếu thu/chi ngoài luồng.4. Chi tiết phiếu Thu cọc giữ chỗ (image_f11929.png)State / Mục đích: Modal Bottom Sheet / Center Dialog mở ra khi click vào item giao dịch ở bước 3 để xem chi tiết hoặc chỉnh sửa.Các Widget chính:Header: Icon Thẻ giá + Title "Thu cọc giữ chỗ" + Nút đóng x.Amount Display: Text số tiền lớn căn giữa: 1.000.000 đ (Màu xanh lá).Key-Value List:Ngày thêm: 28/02/2023Người trả: Nguyễn Thu HàNội dung: Diễn giải thu cọc Phòng 2 ngày 28/2.Hình thức thanh toán: Tiền mặtBottom Actions (Row):Nút xóa (Danger): ElevatedButton đỏ icon thùng rác "Xóa".Nút sửa (Primary): ElevatedButton xanh lá icon bút chì "Chỉnh sửa thông tin".5. Thông tin cọc giữ chỗ & Thao tác Hủy cọc (image_f119c4.png)State / Mục đích: Màn hình quản lý trạng thái cọc của Phòng 2 khi đang có khách đặt.Các Widget chính:Warning Banner (Container viền cam): Icon tam giác cảnh báo + Text "Chú ý: phòng đang ở trạng thái cọc giữ chỗ. Nếu phát sinh cọc mới hoặc tới hạn hãy BỎ CỌC GIỮ CHỖ cho khách cũ!".Form Fields (Disabled/Preview): Hiển thị thông tin cọc của khách Nguyễn Thu Hà - 0856-343-496, tiền cọc 1.000.000 đ.Bottom Action Button: ElevatedButton màu cam full-width: "Bỏ cọc giữ chỗ" (Hủy cọc).6. Dialog Xác nhận Hủy cọc & Hoàn tiền (image_f119c6.png)State / Mục đích: Center Modal Input Dialog xuất hiện khi bấm "Bỏ cọc giữ chỗ" để nhập số tiền trả lại khách (nếu có hoàn cọc).Các Widget chính:Title & Subtitle: Text("Số tiền hoàn lại (Nếu có)") + Text("Nhập số tiền bạn muốn hoàn lại cho khách").TextFormField: Ô nhập số tiền hoàn (mặc định 0 kèm suffix badge đ).Helper Label: Text("Số tiền đã thu 1.000.000 đ") in đậm.Action Buttons (Row):ElevatedButton (Xám): "Đóng".ElevatedButton (Xanh lá): "Xác nhận hủy bỏ".7. Dashboard Thu/chi sau khi Hủy cọc (image_f11a29.png)State / Mục đích: Hệ thống tự động cân đối sổ quỹ sau khi hoàn cọc: Sinh thêm một bản ghi Khoản chi (tiền ra).Biến động số liệu:Khoản thu (tiền vào): + 1.000.000 đKhoản chi (tiền ra): - 1.000.000 đ (Màu cam)Lợi nhuận / Thua lỗ: Cập nhật thành Thua lỗ 0 đ (Cân bằng dòng tiền = 0).Danh sách giao dịch ngày 28/2:Thêm dòng "Hoàn cọc giữ chỗ" màu xám mờ với giá trị -1.000.000 đ.Dòng "Thu cọc giữ chỗ" ban đầu vẫn được lưu lại để phục vụ đối soát lịch sử dòng tiền.
+
+Modal Bottom Sheet / Full-Screen Dialog thông báo Tạo hợp đồng thành công (Contract Creation Success & Next Actions Screen). Màn hình này tự động hiển thị ngay sau khi API tạo hợp đồng trả về kết quả thành công, đóng vai trò điều hướng bước tiếp theo (Next Steps) cho chủ nhà.
+
+Top Success Badge & Congratulation Message (Khối chúc mừng đỉnh)
+
+Success Icon Graphic: Một Container tròn màu xanh lá (BoxShape.circle) chứa Icon(Icons.check, color: Colors.white) ở tâm, bao quanh bởi hiệu ứng đồ họa các chấm sao/pháo hoa nhỏ biểu thị thành công.
+
+Success Title: Text("Chúc mừng bạn đã thêm hợp đồng thành công!") (color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18 - 20, căn giữa TextAlign.center).
+
+Description: Text("Từ giờ bạn có thể quản lý & thu tiền hàng tháng của khách. Vui lòng chọn các hành động tiếp theo.") (color: Colors.black87, textAlign: TextAlign.center).
+
+Tenant App Account Card (Khung thông tin tài khoản App khách thuê)
+Một Container / Card nền vàng/cam pastel nhạt (color: Color(0xFFFFF8E7)), bo góc (BorderRadius.circular(12)):
+
+Card Header: Text("Một tài khoản bên APP khách thuê đã được tạo để kết nối với khách với thông tin:").
+
+Credentials Rows:
+
+Username: Row gồm icon checkmark xanh lá + Text("Username: 0976345086") (chính là SĐT khách vừa nhập, in đậm).
+
+Password: Row gồm icon checkmark xanh lá + Text("Password: ") + Container bo tròn màu trắng che mờ mật khẩu mặc định được sinh tự động.
+
+Next Actions Menu Card (Danh sách hành động tiếp theo)
+Một Card / Container màu trắng, bo góc, viền xám mỏng (Border.all(color: Colors.grey.shade300)). Bên trong là ListView chứa các mục hành động ngăn cách bởi Divider(height: 1):
+
+Action 1: Thu tiền tháng đầu tiên (Recommended Action)
+
+Leading: Icon(Icons.attach_money, size: 28).
+
+Title Row: Text("Thu tiền tháng đầu tiên") (color: Colors.green, fontWeight: FontWeight.bold) + Badge cam: Text("Đề xuất") (Container bo tròn màu cam góc phải).
+
+Subtitle: Text("Thu tiền tháng đầu tiên & tiền cọc (nếu có)").
+
+Trailing: Icon(Icons.chevron_right).
+
+Event: Điều hướng sang màn hình lập phiếu thu / hóa đơn đầu vào.
+
+Action 2: Chia sẻ APP khách thuê
+
+Leading: Icon(Icons.share_outlined).
+
+Title: Text("Chia sẻ APP khách thuê") (fontWeight: FontWeight.bold).
+
+Subtitle: Text("LOZIDO - tìm trọ, căn hộ, vé xe, việc làm & kết nối với chủ nhà").
+
+Trailing: Icon(Icons.chevron_right).
+
+Event: Kích hoạt Native Share Sheet để gửi link tải app LOZIDO Khách Thuê trên App Store / Google Play.
+
+Action 3: Chia sẻ mã kết nối APP khách thuê
+
+Leading: Icon(Icons.crop_free) (Icon khung quét QR/Mã).
+
+Title: Text("Chia sẻ mã kết nối APP khách...") (fontWeight: FontWeight.bold).
+
+Subtitle: Text("Chia sẻ mã kết nối, giúp khách thuê kết nối với bạn & nhận được hóa đơn tự động, ký hợp đồng online vv...").
+
+Trailing: Icon(Icons.chevron_right).
+
+Event: Mở màn hình/modal chia sẻ chuỗi mã kết nối (Room Token) qua SMS/Zalo.
+
+Action 4: Về trang chủ
+
+Leading: Icon(Icons.home_outlined).
+
+Title: Text("Về trang chủ") (fontWeight: FontWeight.bold).
+
+Subtitle: Text("Về trang chủ để tiếp tục quản...").
+
+Trailing: Icon(Icons.chevron_right).
+
+Event: Thực thi Navigator.popUntil(context, (route) => route.isFirst) hoặc pushNamedAndRemoveUntil('/home') để đưa người dùng trở lại Dashboard chính.
+
+
+------------------------------------------------------------------------------------
+
+10. Thu tiền cọc/ và trả phòng kết thúc hợp đồng
+Lập hóa đơn thu tiền đầu vào/tiền cọc (kèm thiết kế màn hình Kết quả Thành công / Thất bại) và quy trình Thanh lý - Kết thúc hợp đồng (Trả phòng).
+🧾 PHẦN 1: LUỒNG LẬP HÓA ĐƠN ĐẦU VÀO & THU CỌC(Phân tích theo ảnh 1, 2, 3: image_f205ec, image_f2066b, image_f20683)Plaintext[Form Lập Hóa Đơn] ──(Click "Lý do lập hóa đơn")──> [Modal Chọn Lý Do: Thu tiền cọc / Tháng đầu]
+        │
+        ▼ (Tự động tính tiền phòng theo ngày thực ở + Tiền cọc)
+[Hiển thị Tổng cộng 5.400.000đ] ──(Click "+ Lập hóa đơn")──> [Màn hình Kết Quả Thành công / Thất bại]
+1. Form Cấu hình Hóa đơn đầu vàoMục tiêu tháng: Text("[ T.1/2025 ]") màu xanh lá in đậm.Lý do lập hóa đơn (Dropdown Box): Mặc định hiển thị "Thu tiền tháng đầu tiên" (có viền highlight xanh, nút x xóa).Modal Chọn lý do lập hóa đơn (image_f2066b): Dialog dạng danh sách lựa chọn:Thu tiền hàng tháng (áp dụng khách ở ổn định).Thu tiền tháng đầu tiên (áp dụng khách đóng tháng đầu vào ở).Thu tiền khi kết thúc hợp đồng (chấm dứt HĐ).Thu tiền phòng theo chu kỳ.Thu tiền dịch vụ.Thu tiền cọc (áp dụng khách đóng cọc chính thức).Khối tính tiền phòng lẻ ngày (image_f205ec):Date Picker: Từ ngày 08/01/2025 đến 01/02/2025.Formula Card: 0 tháng, 24 ngày x 3.000.000 đ = 2.400.000 đ.Khối Thu tiền cọc phát sinh (image_f20683):Section Header icon # + Text "Thu tiền cọc".TextFormField nhập số tiền cọc: 3.000.000 (kèm nút Chọn mẫu).Thẻ tổng kết: Số tiền cọc cần thu 3.000.000 đ $\rightarrow$ Thành tiền: 3.000.000 đ.Sticky Bottom Bar:Checkbox tích chọn "Gửi ZALO & APP khách thuê".Text tổng cộng: 5.400.000 đ ($2.400.000\text{đ} + 3.000.000\text{đ}$).ElevatedButton full-width: + Lập hóa đơn.🎨 THIẾT KẾ MÀN HÌNH THÀNH CÔNG / THẤT BẠI KHI LẬP HÓA ĐƠNTrường hợp 1: Thành công (Success Result Modal)Plaintext┌─────────────────────────────────────────────────────────┐
+│                          ( X )                          │
+│                                                         │
+│                       ┌───────┐                         │
+│                       │   ✔   │  (Circle Avatar Xanh)   │
+│                       └───────┘                         │
+│               Lập hóa đơn thành công!                   │
+│        Hóa đơn T.1/2025 của Phòng 1 đã được tạo        │
+│                                                         │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ Tổng tiền cần thu:                      5.400.000 đ │ │
+│ │ Gửi Zalo/App:                        Đã gửi tự động │ │
+│ │ Mã hóa đơn:                               #HD-97705 │ │
+│ └─────────────────────────────────────────────────────┘ │
+│                                                         │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ [Icon $]  Thu tiền ngay                             │ │
+│ └─────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ [Icon Share]  Chia sẻ hóa đơn qua Zalo / Link       │ │
+│ └─────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │                  Về danh sách phòng                 │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+Trường hợp 2: Thất bại (Failure / Error Dialog)Plaintext┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│                       ┌───────┐                         │
+│                       │   ✖   │  (Circle Avatar Đỏ)     │
+│                       └───────┘                         │
+│                  Lập hóa đơn thất bại!                  │
+│                                                         │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ Lý do lỗi:                                          │ │
+│ │ • Hóa đơn kỳ T.1/2025 của Phòng 1 đã tồn tại trên   │ │
+│ │   hệ thống.                                         │ │
+│ │ • Hoặc: Chỉ số điện nước mới nhỏ hơn chỉ số cũ.     │ │
+│ └─────────────────────────────────────────────────────┘ │
+│                                                         │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │                   [ Thử lại ]                       │ │
+│ └─────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │                     [ Đóng ]                        │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+🚪 PHẦN 2: LUỒNG "THANH LÝ TRẢ PHÒNG" & KẾT THÚC HỢP ĐỒNG(Phân tích theo ảnh 4 đến 9: image_f25fc8 $\rightarrow$ image_f263fd)Plaintext[1. Chọn phòng thanh lý (Phòng 1)] ──(Click Menu 3 chấm)──> [2. BottomSheet: Báo rời đi / Kết thúc HĐ]
+                                                                        │
+                                                                        ▼
+[4. HĐ Final Step: Cấn trừ cọc & Điện nước] ◀──(Lập HĐ cuối)── [3. Checklist 2 việc cần làm trước khi hủy]
+        │
+        ▼ (Sau khi tính chốt tiền điện/nước 183.800đ)
+[Hoàn trả tiền thừa cho khách: -2.817.000đ] ──(Click "+ Lập hóa đơn")──> [Hoàn tất trả phòng]
+1. Màn hình "Có thể Thanh lý" (image_f25fc8)AppBar & SearchBar: Có ô tìm kiếm nhanh và Tab lọc: Tất cả (12), Đang báo kết thúc (0), Sắp kết thúc.Room Item Card (Phòng 1):Tên khách & SĐT: Như Thảo - 0000000123.Hạn hợp đồng: 08/01/2025 - 08/01/2026.Trạng thái App/Ký online: Chưa sử dụng app, Khách chưa ký.Tài chính gốc: Giá thuê 3.000.000 đ, Cọc đã thu 3.000.000 đ.Trailing: IconButton 3 chấm dọc mở menu thao tác.2. Menu Thao tác Hợp đồng phòng (image_f26026)Modal Bottom Sheet:Header: Text("Phòng 1 - Menu thao tác hợp đồng phòng") + nút x.Info Tag: Container viền xanh "Trạng thái 'Đang ở'".Action 1: Báo kết thúc hợp đồng (Khách thông báo trước ngày dọn đi).Action 2: Kết thúc hợp đồng (Khách thực tế dọn đi ngay).3. Màn hình "Kết thúc hợp đồng & Checklist" (image_f2605c, image_f2607e)Date Picker: Ngày khách rời đi * (08/01/2025).Checklist Việc cần làm trước khi kết thúc (Badge 0/2 việc đã làm xong):Card 1: Lập hóa đơn tháng cuối (Icon x cam + text "Không bắt buộc phải làm! Hệ thống phát hiện bạn chưa tạo hóa đơn tháng cuối..." $\rightarrow$ Nút Bỏ qua / Tạo hóa đơn tháng...).Card 2: Kiểm tra tài sản (Icon x cam $\rightarrow$ Nút Đã kiểm tra tài sản).Bottom Bar: Nút "Đóng" và nút "Kết thúc hợp đồng".4. Lập hóa đơn thanh lý & Cấn trừ cọc (image_f260bd, image_f260df, image_f263fd)Loại hóa đơn: Chuyển sang "Thu tiền khi kết thúc hợp đồng".Khối Hoàn tiền cọc (image_f260df):Nhận diện tiền cọc đang giữ: 3.000.000 đ.Số tiền cọc cần hoàn: - 3.000.000 đ.Khối Chốt chỉ số dịch vụ cuối kỳ (image_f263fd):Tiền điện: Chỉ số $[11 - 15] \rightarrow 4\text{ KWh} \times 2.700\text{đ} = 10.800\text{đ}$.Tiền nước: Chỉ số $[4 - 10] \rightarrow 6\text{ Khối} \times 18.000\text{đ} = 108.000\text{đ}$.Tiền rác: $15.000\text{đ}$ + Tiền wifi: $50.000\text{đ}$.Tổng tiền dịch vụ: 183.800 đ.Quyết toán hoàn tiền ở Bottom Bar:$$\text{Số tiền hoàn trả khách} = \text{Tiền dịch vụ} - \text{Tiền cọc} = 183.800\text{đ} - 3.000.000\text{đ} = \mathbf{-2.817.000\text{ đ}}$$
+
+"Kết thúc hợp đồng" (Contract Termination & Confirmation Flow)
+
+🗺️ Sơ đồ luồng trạng thái (State Transition)
+Plaintext
+[Ảnh 1: Màn hình Checklist sau khi đã Lập HĐ cuối] 
+        │
+        ├── Đã hoàn thành 1/2 việc (Hóa đơn tháng cuối đã giải quyết)
+        ├── Còn lại task "Kiểm tra tài sản" (Badge cập nhật thành 0/1 việc)
+        │
+        ▼ (Người dùng click nút "Kết thúc hợp đồng")
+[Ảnh 2: Success Confirmation Dialog]
+        │
+        ├── Hiển thị Checkmark tròn xanh + "Thao tác thành công!"
+        └── Click nút "Đóng" ──> Đổi trạng thái Phòng 1 thành "Đang trống" & quay về Dashboard
+📱 Phân tích chi tiết widget & bố cục
+1. Màn hình Checklist trước khi kết thúc (image_f267c2.png)
+Trạng thái cập nhật (Reactive UI State):
+
+Do ở bước trước người dùng đã hoàn thành thao tác chốt hóa đơn thanh lý, card "Lập hóa đơn tháng cuối" đã được gỡ bỏ khỏi checklist.
+
+Badge tiến độ: Container màu cam bo góc tự động cập nhật label: 0/1 việc đã làm xong!.
+
+Task Card còn lại - "Kiểm tra tài sản":
+
+Leading: Container tròn màu kem/cam nhạt chứa Icon(Icons.close, color: Colors.orange) (Biểu thị chưa xác nhận kiểm tra).
+
+Title: Text("Kiểm tra tài sản") (fontWeight: FontWeight.bold).
+
+Subtitle (Warning): Text("Không bắt buộc phải làm!") (color: Colors.orange).
+
+Description: Text("Kiểm tra lại tài sản, thiết bị trong trước khi kết thúc hợp đồng") (color: Colors.grey[700]).
+
+Action Button: TextButton / OutlinedButton mờ: Text("Đã kiểm tra tài sản") (màu xanh lá nhạt).
+
+Bottom Action Bar:
+
+Nút phụ: ElevatedButton nền xám "Đóng".
+
+Nút chính (CTA): ElevatedButton nền xanh lá Kết thúc hợp đồng (kích hoạt gọi API POST /contracts/terminate hoặc PUT /rooms/97705/checkout).
+
+2. Modal Xác nhận Thành công (image_f267fe.png)
+Lớp phủ nền (Backdrop):
+
+ModalBarrier với barrierColor: Colors.black54 làm mờ toàn bộ màn hình phía sau.
+
+Cấu trúc Dialog (AlertDialog / Custom Dialog):
+
+Shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)).
+
+BackgroundColor: Colors.white.
+
+Success Visual Indicator:
+
+Vòng tròn viền xanh lá Container(shape: BoxShape.circle, border: Border.all(color: Colors.green, width: 4)).
+
+Icon tích xanh Icon(Icons.check, color: Colors.green, size: 48).
+
+Message Content (Column):
+
+Title: Text("Thao tác thành công!") (fontSize: 18, fontWeight: FontWeight.bold, căn giữa).
+
+Body: Text("Bạn đã kết thúc hợp đồng khách cũ!") (fontSize: 15, color: Colors.black87, căn giữa).
+
+Action Button:
+
+ElevatedButton full-width nền xám nhạt (color: Colors.grey[200]).
+
+Label: Text("Đóng") (fontWeight: FontWeight.bold, color: Colors.black).
+
+Event (onPressed): Navigator.of(context).popUntil(...) để đóng modal và điều hướng người dùng quay lại màn hình danh sách phòng (lúc này Phòng 1 đã chuyển sang trạng thái Đang trống).
+
+------------------------------------------------------------------------------------
+
+11. Thiết lập gửi hóa đơn tự động qua Zalo ("Thiết lập gửi hóa đơn tự động qua Zalo", quy trình gửi, gửi lại và theo dõi qua module Lịch sử gửi ZALO)
+
+🗺️ Sơ đồ luồng hoạt động (Zalo Invoice Workflow)Plaintext[Ảnh 1: Dashboard Home] ──(Click "Cài đặt nhà trọ")──> [Ảnh 2: Menu Cài đặt nhà trọ]
+                                                                  │
+                                                        (Click "Cài đặt hóa đơn")
+                                                                  │
+                                                                  ▼
+[Ảnh 4: Confirmation Dialog cảnh báo phí] ◀──(Bật Switch)── [Ảnh 3: Màn hình Cài đặt hóa đơn]
+        │
+        ├── Không sử dụng ──> Hủy kích hoạt
+        └── Sử dụng ZALO ──> Kích hoạt gửi ZNS tự động khi Lập hóa đơn
+                                 │
+                                 ├──> [Thành công] ──> [Ảnh 5: Giao diện Tin nhắn Zalo OA gửi tới khách]
+                                 ├──> [Thất bại] ──> Chủ nhà vào Thu tiền > Gửi lại hóa đơn Zalo
+                                 │
+                                 ▼
+               [Ảnh 6: Mục "Lịch sử gửi ZALO" tại Trang chủ để đối soát]
+📱 Phân tích chi tiết từng màn hình theo chuẩn Mobile Dev1. Điều hướng từ Trang chủ (Ảnh 1 & Ảnh 2)Ảnh 1 (image_...png) - Dashboard Menu:Tại Section "Menu quản lý nhà trọ", người dùng bấm vào module Cài đặt nhà trọ (Card icon tòa nhà + bánh răng xanh).Ảnh 2 (image_...png) - Danh sách thiết lập tòa nhà:ListView chứa các ListTile quản trị: Nhóm phòng theo dãy/tầng, Tăng giá thuê, Dịch vụ, Cài đặt hóa đơn, Cài đặt thu/chi.Người dùng chọn item Cài đặt hóa đơn (Icon tờ hóa đơn Icons.receipt_long) để cấu hình mẫu và kênh gửi.2. Màn hình Cấu hình & Popup cảnh báo phí Zalo (Ảnh 3 & Ảnh 4)Ảnh 3 (image_...png) - Cài đặt hóa đơn:SwitchListTile "Gửi hóa đơn qua ZALO":Title: "Gửi hóa đơn qua ZALO".Subtitle: "Khi bật tính năng này hóa đơn sẽ được gửi tự cho khách thuê qua Zalo".Warning text màu cam: * Tính năng này có áp dụng phí dịch vụ.Link: TextButton có gạch chân "Tìm hiểu gửi hóa đơn qua ZALO".Các thiết lập đi kèm: Hiển thị mã QR, Làm tròn hóa đơn tới 1.000đ, Phân loại thu/chi từ hóa đơn, Ngày lập hóa đơn (30), Hạn đóng tiền (7 Ngày).Ảnh 4 (image_...png) - Confirmation Alert Dialog:Được kích hoạt ngay khi người dùng gạt Toggle Switch Zalo sang trạng thái ON.AlertDialog:Header Icon: Container tròn viền cam chứa Icon(Icons.info_outline, color: Colors.orange).Title: Text("Thông báo xác nhận") (In đậm).Content: Text("Khi sử dụng tính năng gửi hóa đơn qua ZALO là có phí trên một tin nhắn. Bạn có thể chọn giải pháp 'APP dành cho khách thuê' không mất phí").Actions (Row 2 nút):Nút từ chối: ElevatedButton nền xám ("Không sử dụ...").Nút đồng ý: ElevatedButton nền xanh nhạt ("Sử dụng ZALO").3. Trạng thái gửi Hóa đơn qua ZaloTrường hợp 1: Gửi thành công ngay khi lập (Ảnh 5)Hệ thống kết nối trực tiếp với Zalo Notification Service (ZNS) thông qua Zalo Official Account (OA) có tích vàng xác thực của LOZIDO:Header Zalo OA: Avatar + Tên "LOZIDO" (Badge tích vàng) + Subtitle "Tài khoản OA".Mẫu tin nhắn tương tác (Interactive Message Template):Logo thương hiệu: LOZIDO Tìm TRỌ - CĂN HỘ.Lời chào: Xin chào [Tên khách], Hóa đơn tiền thuê nhà tháng [X] từ [Tên nhà trọ].Bảng chi tiết: Mã hóa đơn (#139506), Mã thanh toán (Q5-P1), Tiền phòng, Tiền điện, Tiền nước, Dịch vụ khác, Cộng/Giảm trừ, Tổng tiền (3.065.000đ).Hạn thanh toán: Hiển thị thời hạn cụ thể.Call To Action Button: Nút bấm màu xanh dương full-width XÁC NHẬN THANH TOÁN (dẫn tới Web Payment / QR VietQR để khách chuyển khoản).Trường hợp 2: Gửi thất bại & Quy trình gửi lại (Fallback Flow)Nguyên nhân thất bại thường gặp: SĐT của khách chưa đăng ký Zalo, tài khoản Zalo của khách chặn tin nhắn từ OA doanh nghiệp, hoặc số dư ví tài khoản gửi ZNS của chủ nhà không đủ.Luồng xử lý gửi lại:$$\text{Chi tiết phòng / Tab Hóa đơn} \rightarrow \text{Mở Hóa đơn cần thu} \rightarrow \text{Chọn 'Gửi hóa đơn'} \rightarrow \text{Chọn 'Gửi Zalo'}$$4. Đối soát tại mục "Lịch sử gửi ZALO" (Ảnh 6)Vị trí: Nằm trong khối "Thao tác khác" tại Màn hình chính (Trang chủ).Cấu trúc Widget:ListTile custom:Leading: Avatar tròn màu xanh dương chứa icon logo Zalo có chấm đỏ thông báo.Title: Lịch sử gửi ZALO (fontWeight: FontWeight.bold).Subtitle: Text("Xem lịch sử gửi hóa đơn tự động qua zalo. Thành công hay thất bại").Link Trailing/Bottom: Text("Tìm hiểu gửi hóa đơn qua ZALO") (dạng link gạch chân).Trailing: Icon Icons.chevron_right.Chức năng màn hình bên trong (Audit Log):Thống kê toàn bộ nhật ký tin nhắn đã phát đi.Phân loại trạng thái rõ ràng bằng Badge màu: Thành công (Đã nhận / Đã xem) hoặc Thất bại (kèm mã lỗi chi tiết từ Zalo API).Cung cấp nút thao tác nhanh: Thử gửi lại (Retry) hoặc Chuyển sang gửi SMS.
+
+------------------------------------------------------------------------------------
+
+12. "Thao tác với hóa đơn - Thu tiền hóa đơn" và các phương thức Chia sẻ / Gửi hóa đơn đa kênh (Zalo, SMS, In ấn, Hình ảnh)
+
+🗺️ Sơ đồ luồng xử lý (Invoice Actions & Multi-Channel Share Workflow)Plaintext[Ảnh 1: Danh sách HĐ Cần Thu] ──(Click "Chi tiết" hoặc Card)──> [Ảnh 2 & 5: Chi tiết hóa đơn]
+       │                                                                  │
+       ├──(Click "Thu nhanh") ──> Xác nhận thu tiền ngay                  ├──(Click "In phiếu" / "In mini") ──> Máy in Bluetooth/ESC-POS
+       └──(Click "Gọi điện")  ──> url_launcher tel:                       ├──(Click "Gửi SMS") ──> SMS Intent soạn sẵn tin nhắn
+                                                                          └──(Click "Chia sẻ")
+                                                                                  │
+                                                                                  ▼
+[Ảnh 4: System Native Share Sheet] ◀──(Click "Chia sẻ hình ảnh")── [Ảnh 3: Template Hóa đơn Online / Render Image]
+📱 Phân tích chi tiết widget & chức năng kỹ thuật1. Danh sách hóa đơn cần thu (image_541be7.png)AppBar: Icon Menu List + Title "Danh sách hóa đơn cần thu" + Subtitle + Nút đóng x.Invoice Summary Card (Card / Container bo góc):Leading Cycle Badge: Container cam bo góc ghi chu kỳ T.3 / 2023.Room & Status Row: Text("Phòng 3 (04/03/2023)") + Chips trạng thái cam ("Chưa thu", "Chưa gửi phiếu").Quick Action Row (Horizontal Scroll / Row):Gọi điện: FilledButton xanh nhạt + Icon(Icons.phone) $\rightarrow$ Kích hoạt cuộc gọi trực tiếp tới khách.Thu nhanh: FilledButton xanh mint + Icon(Icons.attach_money) $\rightarrow$ Mở popup thu tiền nhanh không cần vào chi tiết.In phiếu: FilledButton xanh lá + Icon(Icons.print) $\rightarrow$ Kết nối máy in nhiệt / chia sẻ lệnh in.Chia sẻ: FilledButton xanh lá + Icon(Icons.share).Financial Balance Grid: 3 cột phân định (Tổng số: 3.802.500 đ, Đã trả: 0 đ, Còn lại: = 3.802.500 đ in đỏ).Bottom Action: ElevatedButton full-width màu cam Đóng thao tác.2. Màn hình Chi tiết hóa đơn (image_541c08.png & image_54230e.png)Horizontal Action Bar (Thanh công cụ tác vụ đa phương thức):Bố cục: Row / ListView ngang gồm các Card nút bấm vuông viền mỏng bo góc:In phiếu: In mẫu hóa đơn khổ A4/A5 tiêu chuẩn (Printing / PDF package).In mini: In bill mini qua máy in nhiệt Bluetooth 58mm/80mm (ESC/POS protocol).Chia sẻ: Mở giao diện chia sẻ hình ảnh / link hóa đơn điện tử.Gọi điện: Gọi điện cho khách thuê (Trần Thủy Tiên).Gửi SMS (image_54230e.png): Kích hoạt Intent SMS soạn sẵn cú pháp nhắc nợ gửi thẳng tới SĐT khách.Invoice Breakdown Body (Card nền trắng):Tiêu đề: Phòng 3 - Khách thuê: Trần Thủy Tiên.Metadata Table: Hóa đơn tháng T.3, 2023 | Ngày lập: 04/03/2023 | Hạn nạp: 11/03/2023.Lý do thu: Thu tiền hàng tháng (Chip cam: Chưa thu).Khoản mục:Tiền thuê phòng (30 ngày): 3.500.000 đ.Tiền dịch vụ (Click xem chi tiết): 302.500 đ.Tổng cộng kỳ này: 3.802.500 đ.Sticky Bottom Actions:CheckboxListTile: "Đánh dấu là đã gửi phiếu báo nợ cho khách thuê".Cặp nút CTA:Hủy bỏ phiếu: ElevatedButton màu cam (color: Colors.orange).Thu tiền: ElevatedButton màu xanh lá icon hóa đơn (color: Colors.green).3. Giao diện xem trước & Chia sẻ hình ảnh hóa đơn (image_541f6b.png)State / Mục đích: Màn hình Render bố cục hóa đơn hoàn chỉnh để chuẩn bị xuất thành ảnh (RepaintBoundary) gửi qua Zalo / Facebook Messenger / Viber.Top Button: ElevatedButton màu xanh dương icon tài liệu Chia sẻ nội dung hoá đơn online (tạo Webview Link).Rendered Invoice Template (RepaintBoundary target):Header: Phòng 3 - Nhà trọ Ngọc Anh.Thông tin người nhận: Kính gửi Trần Thủy Tiên - SĐT: 0965-227-453.Bảng chi tiết dịch vụ chốt thực tế:Tiền điện: Chỉ số mới 2550790, Cũ 2550739 $\rightarrow$ $51\text{ KWh} \times 3.500\text{đ} = \mathbf{178.500\text{ đ}}$.Tiền nước: Chỉ số mới 25809, Cũ 25806 $\rightarrow$ $3\text{ Khối} \times 18.000\text{đ} = \mathbf{54.000\text{ đ}}$.Bottom Action Buttons:Nút phụ: ElevatedButton xám "Đóng".Nút chính: ElevatedButton xanh lá icon share Chia sẻ bằng hình ảnh.4. Hộp thoại chia sẻ hệ thống (System Native Share Sheet - image_541fcf.png)Widget: Tích hợp qua package share_plus kích hoạt Bottom Sheet chia sẻ của hệ điều hành.Thành phần:Text Snippet Box: Khung chứa nội dung text tóm tắt: "Hóa đơn tiền phòng cho T.3, 2023 là: 3.802.500 VNĐ. Vui lòng đóng t..." kèm nút icon copy clipboard.Native Targets: Các kênh chia sẻ nhanh hệ thống (Nearby Share, Quick Share/realme Share, Zalo, Tin nhắn, Messenger, Gmail...).
+
+------------------------------------------------------------------------------------
+
+13. "Thu / chi & Tổng kết", bao gồm bộ lọc, chi tiết giao dịch (sửa/xóa), tạo phiếu thu/chi ngoài luồng và cấu hình danh mục thu chi
+
+🗺️ Sơ đồ luồng hoạt động (Cash Flow & Expense Management Flow)
+Plaintext
+[1. Dashboard Thu / Chi]
+  ├── (Click Icon Filter) ──> [Ảnh 1: BottomSheet Lọc nâng cao (Tháng/Quý/Năm)]
+  ├── (Click 1 Giao dịch) ──> [Ảnh 2: Modal Chi tiết phiếu Thu/Chi] ──> [Xóa / Chỉnh sửa]
+  ├── (Click FAB Nút +)   ──> [Ảnh 3: Speed Dial FAB: Thêm phiếu thu / Thêm phiếu chi]
+  │                                │
+  │                                └──(Chọn "Thêm phiếu chi") ──> [Ảnh 4: Form Thêm phiếu chi]
+  │                                                                       │
+  │                                                 (Click "Danh mục chi") ──> [Ảnh 5: Modal Danh mục chi]
+  │
+  └── (Click Icon Cài đặt đỉnh) ──> [Ảnh 6: Cài đặt thu/chi (Hệ thống & Tự tạo)]
+                                           │
+                                 (Click "+ Thêm danh mục") ──> [Ảnh 7: Modal Thêm danh mục chi mới]
+📱 Phân tích chi tiết từng màn hình theo chuẩn Mobile Dev
+1. Bộ lọc Thu / Chi nâng cao (image_55046a.png)
+State / Mục đích: Modal Bottom Sheet lọc và gom nhóm dòng tiền theo thời gian và danh mục.
+
+Các Widget chính:
+
+Modal Header: Icon Filter + Title "Lọc thu/chi" (subtitle: "Bạn có thể thống kê theo tháng/quý/năm") + Nút đóng x.
+
+Dropdown Box - Thời gian: Đang chọn "Theo tháng" (kèm nút x reset).
+
+Date/Month Picker - Chọn tháng: Đang chọn "Tháng 3, 2023".
+
+Dropdown Box - Danh mục thu/chi: Cho phép chọn lọc theo từng khoản mục chi tiết.
+
+Dropdown Box - Sự lặp lại phiếu thu/chi: Lọc các khoản định kỳ phát sinh hàng tháng.
+
+Bottom Actions (Row):
+
+Nút "Xóa lọc": ElevatedButton nền xám nhạt icon x.
+
+Nút "Lọc thu/chi": ElevatedButton nền xanh lá icon Filter.
+
+2. Chi tiết phiếu thu/chi - Thao tác Xóa & Sửa (image_55046c.png)
+State / Mục đích: Center Modal Dialog / Bottom Sheet hiển thị đầy đủ chứng từ thu/chi và hỗ trợ chỉnh sửa hoặc hủy phiếu.
+
+Các Widget chính:
+
+Header: Icon Thẻ giá (Icons.local_offer) + Title "Thu tiền hàng tháng" + Nút đóng x.
+
+Amount Text: Số tiền lớn căn giữa: 3.950.000 đ (Xanh lá).
+
+Key-Value List:
+
+Ngày thêm: 07/03/2023.
+
+Người trả: Đỗ Việt Thy.
+
+Nội dung: Thu tiền hàng tháng Phòng 5 - 3/2023.
+
+Liên kết hóa đơn: Card xám có icon >: Phát sinh từ hóa đơn #11386 (Dẫn trực tiếp sang màn hình Hóa đơn gốc).
+
+Hình thức thanh toán: Chuyển khoản.
+
+Bottom Actions (Row 2 nút chia đều):
+
+Xóa (Danger CTA): ElevatedButton nền đỏ icon thùng rác (Icons.delete).
+
+Chỉnh sửa (Primary CTA): ElevatedButton nền xanh lá icon bút chì (Icons.edit).
+
+3. Nút tác vụ nhanh tạo phiếu (Speed Dial FAB - image_55046d.png)
+State / Mục đích: Khi click nút + (FAB) ở góc phải dưới, hiệu ứng mở rộng (Speed Dial) xuất hiện đè lên giao diện làm mờ:
+
+Thanh tác vụ 1: Label Text("Thêm phiếu thu") + Mini FAB tròn xanh lá icon Tờ hóa đơn (Icons.receipt_long).
+
+Thanh tác vụ 2: Label Text("Thêm phiếu chi") + Mini FAB tròn xanh lá icon Văn bản chi (Icons.description).
+
+Nút gốc (Close): Icon đổi thành dấu x đóng menu.
+
+4. Form Thêm phiếu chi (image_5504a6.png)
+State / Mục đích: Màn hình Form tạo khoản chi phát sinh ngoài (sửa chữa, nộp thuế, mua thiết bị...).
+
+Các Widget chính:
+
+Amount Header Box: Ô hiển thị số tiền chi lớn màu cam 500.000 đ.
+
+Selector - Phương thức thanh toán: Icon ngân hàng + "Chuyển khoản ngân hàng".
+
+TextFormField: "Người nhận *" và "Nội dung chi *".
+
+Row (Danh mục chi & Thêm nhanh):
+
+DropdownSelector "Danh mục chi *" (Expanded).
+
+OutlinedButton + Thêm: Mở popup tạo nhanh danh mục chi mới ngay tại form.
+
+Date Picker: "Ngày lập phiếu chi *" (11/03/2023).
+
+CheckboxListTile: "Lặp lại" (subtitle: "Bạn có muốn lặp phí chi này hàng tháng?").
+
+Bottom Persistent Buttons: Nút "Hủy" (xám) và "Thêm phiếu chi" (xanh lá full-width).
+
+5. Modal Chọn danh mục chi (image_5504e4.png)
+State / Mục đích: Center Dialog Picker chọn loại khoản chi có sẵn trong hệ thống:
+
+Chi phí quản lý (Chấm tím, icon khiên bảo vệ).
+
+Hoàn tiền cọc (Chấm xanh dương, icon thẻ giá).
+
+Trả tiền điện (Chấm đỏ, icon tia sét).
+
+Trả tiền nước (Chấm hồng, icon giọt nước).
+
+Trả tiền wifi (Chấm mận, icon wifi).
+
+Trả tiền cáp TV (Chấm đen, icon tivi).
+
+Cho vay / Trả nợ / Giảm trừ hóa đơn.
+
+Nút "Đóng" đáy modal.
+
+6. Quản lý danh mục & Cài đặt Thu / Chi (image_550561.png)
+State / Mục đích: Màn hình quản lý danh sách danh mục thu/chi hệ thống và các khoản lặp lại.
+
+Các Widget chính:
+
+Top Action Card: Icon phiếu thu + Title "Phiếu thu/chi lặp lại hàng tháng" + Trailing arrow >.
+
+Section Header: Row gồm Text("Danh mục thu") bên trái và Nút FilledButton bo tròn góc phải: + Thêm danh mục thu.
+
+ListView Danh mục mặc định do hệ thống tạo (Read-only, ghi chú cam: "Hệ thống tạo, không thể sửa"):
+
+Thu tiền cọc, Thu tiền dịch vụ, Thu tiền giường, Thu tiền phòng, Thu cọc giữ chỗ, Thu tiền theo chu kỳ, Thu tiền kết thúc hợp đồng.
+
+7. Modal Thêm danh mục chi mới (image_550865.png)
+State / Mục đích: Modal Bottom Sheet / Input Dialog cho phép chủ nhà tự định nghĩa thêm danh mục chi tùy biến theo nhu cầu thực tế:
+
+Các Widget chính:
+
+Drag Handle + Title "Thêm danh mục chi" + Nút đóng x.
+
+TextFormField: "Tên danh mục chi *" (Đang nhập: "Chi phí dọn vệ sinh").
+
+Dropdown Selector: "Trạng thái danh mục *" (Đang chọn: "Hoạt động").
+
+Bottom Actions (Row): Nút "Hủy" (xám) và "Thêm danh mục chi" (xanh lá).
+
+Kích hoạt bàn phím ảo hệ thống hỗ trợ gợi ý từ.
+
+------------------------------------------------------------------------------------
+
+14. 
+Quản lý tài sản, nội thất trong nhà cho thuê
+
+🗺️ Sơ đồ luồng tính năng (Asset Management Workflow)Plaintext[Ảnh 1: Dashboard Home] ──(Click "Quản lý tài sản")──> [Ảnh 2: Danh sách tài sản (Empty State)]
+                                                                   │
+                                                           (Click FAB Nút +)
+                                                                   │
+                                                                   ▼
+[Ảnh 5: Danh sách tài sản đã có dữ liệu] ◀──(Lưu)── [Ảnh 3 & 4: Form Thêm tài sản mới]
+📱 Phân tích chi tiết từng màn hình theo chuẩn Mobile Dev1. Menu Trang chủ (image_551b2f.png)Vị trí: Section "Menu quản lý nhà trọ".Widget Thẻ module: Card bo góc màu trắng:Icon: Hình minh họa sổ kiểm kê, túi đồ đạc và dấu chấm than cảnh báo (Icons.inventory_2_outlined).Title: Text("Quản lý tài sản") (fontWeight: FontWeight.bold).Event (onTap): Điều hướng sang màn hình AssetListScreen.2. Màn hình Danh sách tài sản - Trạng thái trống (image_551b4d.png)State / Mục đích: Màn hình hiển thị khi nhà trọ chưa tạo bất kỳ tài sản/nội thất nào trong kho dữ liệu tổng.Các Widget chính:AppBar: Nút Back tròn + Column (Text("Danh sách tài sản") in đậm + Subtitle "Nhà trọ Quận 5").EmptyState Widget (Căn giữa màn hình):Graphic: Image.asset hình chiếc hộp rỗng và chú bướm/ruồi bay ra biểu thị kho trống.Title: Text("Không có dữ liệu!") (fontWeight: FontWeight.bold, fontStyle: FontStyle.italic).Subtitle: Text("Không có dữ liệu!") (Màu xám nhạt).FloatingActionButton (FAB): Nút tròn màu xanh lá (Icons.add) cố định góc phải dưới để mở form thêm tài sản.3 & 4. Form Thêm tài sản mới (image_551b6f.png & image_551baf.png)State / Mục đích: Form thu thập thông tin định danh, hình ảnh icon đại diện, giá trị định giá đền bù, giá vốn và đơn vị tính của tài sản.Các Widget chi tiết từ trên xuống dưới:TextFormField - Tên tài sản: Label "Tên tài sản *", placeholder "Ví dụ: Tủ lạnh".Icon Picker Grid (Bộ chọn icon đồ họa):Label: Text("Chọn icon").Dựng bằng GridView.count(crossAxisCount: 5): Tập hợp 12 ô vuông bo góc viền mỏng chứa icon nét mảnh gồm: Tủ lạnh, máy giặt, máy lạnh/điều hòa, đèn trần, bàn, sofa, tủ quần áo, tủ kệ, chìa khóa, bảng treo cửa, giường ngủ, bàn làm việc.Row 2 cột - Giá trị & Giá vốn (image_551baf.png):Cột 1 (TextFormField): "Giá trị tài sản *" $\rightarrow$ Nhập 4.000.000 kèm suffix badge đ (Giá trị dùng để bắt đền bù khi khách làm hỏng/mất).Cột 2 (TextFormField): "Giá nhập vào *" $\rightarrow$ Nhập 6.000.000 kèm suffix badge đ (Giá vốn mua sắm tài sản ban đầu).Row 2 cột - Số lượng & Nhà cung cấp:Cột 1 (TextFormField): "Số lượng tài sản *" $\rightarrow$ Nhập 5.Cột 2 (TextFormField): "Nhà cung cấp" $\rightarrow$ Nhập đối tác phân phối/cửa hàng điện máy.TextFormField - Đơn vị tính:Input nhập: "Cái/Chiếc".Trailing Button: OutlinedButton icon danh sách + Text Chọn mẫu (Mở modal chọn nhanh: Cái, Bộ, Chiếc, Cặp...).DropdownSelector - Trạng thái: Card xám hiển thị "Trạng thái *" $\rightarrow$ Đang hoạt động.Sticky Bottom Bar (Row):Nút "Đóng": ElevatedButton nền xám nhạt.Nút "+ Thêm tài sản": ElevatedButton nền xanh lá full-width.5. Danh sách tài sản sau khi tạo thành công (image_551be7.png)State / Mục đích: Hiển thị danh mục tài sản tổng của tòa nhà dưới dạng ListView.builder.Cấu trúc Thẻ tài sản (Asset Item Card):Container bo góc màu trắng, viền mỏng:Leading: Khung tròn chứa icon tài sản đã chọn (Icon Tủ lạnh).Middle Column:Title: Text("Tủ lạnh") (fontWeight: FontWeight.bold).Price: Text("4.000.000 đ") (fontWeight: FontWeight.bold).Quantity: Text("Số lượng: 5 Cái") (color: Colors.grey[700]).Trailing: IconButton 3 chấm dọc (Icons.more_vert) để mở popup thao tác nhanh: Chỉnh sửa, Xóa, Xem danh sách phòng đang sử dụng tủ lạnh này.FAB: Vẫn ghim ở góc dưới để tiếp tục thêm các trang thiết bị khác vào nhà trọ.
+
+
+------------------------------------------------------------------------------------
+
+15. Quên tài khoản / Khôi phục mật khẩu" (Forgot Password / Account Recovery Flow)
+
+🗺️ Sơ đồ luồng khôi phục tài khoản (Account Recovery Workflow)
+Plaintext
+[Ảnh 1: Màn hình Đăng nhập] ──(Click "Quên tài khoản ?")──> [Ảnh 2: Màn hình Xác minh SĐT]
+                                                                        │
+                                                  (Nhập SĐT & Bấm "Yêu cầu đổi mật khẩu")
+                                                                        │
+                                                                        ▼
+[Ảnh 4: Nhận OTP qua Zalo + Modal thông báo] ◀──(Sinh OTP)── [Ảnh 3: Form Nhập mật khẩu mới]
+        │
+        ▼ (Bấm "Bắt đầu nhập mã")
+[Ảnh 5: Màn hình Xác nhận PhoneCode (Nhập 6 số OTP)]
+        │
+        ▼ (Bấm "Xác nhận" -> API xác thực OTP & cập nhật Password mới)
+[Ảnh 6: Dialog Xác nhận đổi mật khẩu thành công]
+        │
+        ▼ (Bấm "Đăng nhập")
+[Ảnh 7: Màn hình Đăng nhập (Sẵn sàng đăng nhập với mật khẩu mới)]
+📱 Phân tích chi tiết từng màn hình theo chuẩn Mobile Dev
+1. Kích hoạt luồng từ Màn hình Đăng nhập (image_552368.png)
+Widget hành động: TextButton hoặc InkWell chứa Text("Quên tài khoản ?") có thuộc tính gạch chân (Underline).
+
+Khối hỗ trợ (Support Card):
+
+Container bo góc nền xám nhạt: Chấm tròn đỏ trạng thái hoạt động + Text("Hỗ trợ 24/7").
+
+Danh sách nút hỗ trợ nhanh:
+
+FilledButton "Gọi điện trực tiếp (sẵn sàng)" (icon điện thoại).
+
+FilledButton "Chat/Gọi điện qua Zalo (sẵn sàng)" (icon Zalo).
+
+Sự kiện: Nhấn vào "Quên tài khoản ?" sẽ đẩy (Navigator.push) sang màn hình Xác minh số điện thoại.
+
+2. Màn hình Xác minh số điện thoại (image_552613.png)
+AppBar: Icon Back tròn (IconButton) + Title "Xác minh số điện thoại".
+
+Branding: Logo chữ "A" + Text("LOZIDO - Quản lý NHÀ CHO THUÊ").
+
+Form Field:
+
+TextFormField: Ô "Nhập số điện thoại" (keyboardType: TextInputType.phone).
+
+Alert Banner (Container viền cam, nền cam nhạt):
+
+Leading: Icon tam giác cảnh báo màu cam (Icons.warning_amber_rounded).
+
+Content: Text hướng dẫn: "Chú ý: Hãy chắc chắn số điện thoại của bạn nhập là đúng. Hệ thống sẽ gửi mã xác nhận qua số điện thoại này để xác minh...".
+
+Cặp nút điều hướng:
+
+Primary CTA: ElevatedButton xanh lá full-width: Yêu cầu đổi mật khẩu.
+
+Secondary CTA: ElevatedButton xám: Quay lại đăng nhập.
+
+3. Màn hình Thiết lập mật khẩu mới (image_552674.png)
+AppBar: Icon Back + Title "Yêu cầu đổi mật khẩu".
+
+Secure Input Fields (Column):
+
+Ô 1 (Mật khẩu mới): TextFormField với obscureText: true, suffix icon con mắt (Icons.visibility_off) để toggle ẩn/hiện.
+
+Ô 2 (Xác nhận mật khẩu mới): TextFormField kiểm tra khớp mật khẩu (validator).
+
+Actions:
+
+Nút chính: ElevatedButton xanh lá Đổi mật khẩu.
+
+Nút phụ: ElevatedButton xám Quay lại.
+
+4. Nhận mã OTP qua Zalo & Modal thông báo (image_552693.png)
+Push Notification (Hệ thống): Banner thông báo từ Zalo hiển thị trên đỉnh màn hình: "LOZIDO: Mã xác thực của bạn là 427895..." (Tích hợp Zalo ZNS OTP).
+
+Modal Dialog Thông báo thành công:
+
+Center Dialog bo góc màu trắng trên nền tối ModalBarrier.
+
+Visual: Vòng tròn viền xanh lá chứa icon Checkmark (Icons.check).
+
+Title: Text("Thao tác thành công!") in đậm.
+
+Body: Text("Một mã xác nhận đã gửi về Zalo qua SĐT [09xxx]... Vui lòng nhập mã xác nhận để tiếp tục").
+
+CTA Button: ElevatedButton full-width nền xám nhạt: Bắt đầu nhập mã.
+
+5. Màn hình Xác nhận PhoneCode / OTP (image_5526b1.png)
+AppBar: Title "Xác nhận PhoneCode (OTP)".
+
+Visual Header: Graphic minh họa điện thoại với mã số và khiên bảo mật màu xanh lá có nhãn vàng OTP.
+
+Guide Label: Text("Xác nhận - Nhập mã 6 số để xác nhận SĐT của bạn") (Căn giữa).
+
+OTP Input Widget:
+
+Dựng bằng component Pinput hoặc Row 6 ô Container vuông bo góc viền mỏng (crossAxisAlignment: CrossAxisAlignment.center).
+
+Tự động bắt mã từ clipboard hoặc SMS/Zalo Autofill.
+
+Action Buttons (Row chia đều):
+
+Nút bên trái: ElevatedButton xám Gửi lại mã (kèm bộ đếm ngược Timer Countdown nếu cần).
+
+Nút bên phải: ElevatedButton xanh lá Xác nhận (Gửi OTP + Mật khẩu mới lên Backend).
+
+Support Section: Box hỗ trợ sự cố OTP 24/7 ở đáy màn hình.
+
+6. Modal Xác nhận Đổi mật khẩu hoàn tất (image_5526d1.png)
+Dialog Thông báo hoàn tất:
+
+Title: Text("Thông báo xác nhận thành công!") in đậm.
+
+Body: Text("Đổi mật khẩu mới thành công! Vui lòng đăng nhập để tiếp tục").
+
+Action Button: TextButton / ElevatedButton viền xanh chữ xanh: Đăng nhập.
+
+7. Điều hướng về Màn hình Đăng nhập (image_5526f2.png)
+Trạng thái đích:
+
+Thực thi Navigator.popUntil(...) dọn sạch stack điều hướng và trở về LoginScreen.
+
+Trường Số điện thoại và Mật khẩu sẵn sàng để người dùng nhập thông tin vừa đổi và đăng nhập vào ứng dụng.
+
+------------------------------------------------------------------------------------
+
+
+
+

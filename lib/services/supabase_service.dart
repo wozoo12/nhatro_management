@@ -1,0 +1,1 @@
+// Chứa toàn bộ các hàm query CRUD Supabase
