@@ -11,7 +11,6 @@ class TenantBloc extends Bloc<TenantEvent, TenantState> {
 
   /// Khởi tạo Bloc với trạng thái ban đầu là TenantInitial.
   TenantBloc(this._repository) : super(TenantInitial()) {
-    
     // Đăng ký các hàm xử lý cho từng loại Sự kiện
     on<FetchTenants>(_onFetchTenants);
     on<FetchAvailableRooms>(_onFetchAvailableRooms);
@@ -68,14 +67,17 @@ class TenantBloc extends Bloc<TenantEvent, TenantState> {
       // 1. Upload ảnh mặt trước nếu có chụp
       if (event.frontCard != null) {
         emit(const TenantUploadingImage(0.3)); // Tiến độ 30%
-        final fileName = 'cccd/front_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        frontUrl = await _repository.uploadCCCDImage(event.frontCard!, fileName);
+        final fileName =
+            'cccd/front_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        frontUrl =
+            await _repository.uploadCCCDImage(event.frontCard!, fileName);
       }
 
       // 2. Upload ảnh mặt sau nếu có chụp
       if (event.backCard != null) {
         emit(const TenantUploadingImage(0.6)); // Tiến độ 60%
-        final fileName = 'cccd/back_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final fileName =
+            'cccd/back_${DateTime.now().millisecondsSinceEpoch}.jpg';
         backUrl = await _repository.uploadCCCDImage(event.backCard!, fileName);
       }
 
@@ -86,9 +88,8 @@ class TenantBloc extends Bloc<TenantEvent, TenantState> {
       );
       await _repository.addTenant(tenantToSave);
 
-      // 4. Phát thông báo thành công và yêu cầu tải lại danh sách khách
+      // Màn hình gọi thao tác sẽ tự tải lại danh sách sau khi đóng form.
       emit(const TenantLoaded(message: 'Đã lưu hồ sơ khách thuê thành công!'));
-      add(FetchTenants());
     } catch (e) {
       emit(TenantError('Lỗi xử lý hồ sơ: ${e.toString()}'));
       if (currentState is TenantLoaded) emit(currentState);
@@ -113,7 +114,7 @@ class TenantBloc extends Bloc<TenantEvent, TenantState> {
     }
   }
 
-  /// [Hàm xử lý Ký Hợp Đồng Mới]: 
+  /// [Hàm xử lý Ký Hợp Đồng Mới]:
   /// Thực hiện 2 việc: Lưu hợp đồng + Đổi trạng thái phòng sang ĐÃ THUÊ (OCCUPIED)
   Future<void> _onCreateContract(
     CreateContract event,
@@ -124,10 +125,11 @@ class TenantBloc extends Bloc<TenantEvent, TenantState> {
     try {
       // Gọi repository thực hiện nghiệp vụ kép (bám sát logic 3NF)
       await _repository.createContract(event.contract);
-      
+
       // Thông báo thành công cho UI
-      emit(const TenantLoaded(message: 'Ký hợp đồng thành công! Phòng đã được đưa vào sử dụng.'));
-      
+      emit(const TenantLoaded(
+          message: 'Ký hợp đồng thành công! Phòng đã được đưa vào sử dụng.'));
+
       // Tải lại danh sách khách để đồng bộ trạng thái
       add(FetchTenants());
     } catch (e) {

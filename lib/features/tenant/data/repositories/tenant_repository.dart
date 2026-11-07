@@ -17,7 +17,10 @@ class TenantRepository {
   /// Lấy danh sách toàn bộ khách thuê
   Future<List<TenantModel>> getTenants() async {
     try {
-      final response = await _client.from('tenants').select().order('created_at', ascending: false);
+      final response = await _client
+          .from('tenants')
+          .select()
+          .order('created_at', ascending: false);
       return (response as List).map((e) => TenantModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception('Lỗi lấy danh sách khách thuê: $e');
@@ -27,7 +30,11 @@ class TenantRepository {
   /// Thêm mới một khách thuê
   Future<TenantModel> addTenant(TenantModel tenant) async {
     try {
-      final response = await _client.from('tenants').insert(tenant.toJson()).select().single();
+      final response = await _client
+          .from('tenants')
+          .insert(tenant.toJson())
+          .select()
+          .single();
       return TenantModel.fromJson(response);
     } catch (e) {
       throw Exception('Lỗi khi thêm khách thuê: $e');
@@ -57,7 +64,8 @@ class TenantRepository {
   /// Lấy danh sách phòng TRỐNG để chuẩn bị ký hợp đồng mới
   Future<List<RoomModel>> getAvailableRooms() async {
     try {
-      final response = await _client.from('rooms').select().eq('status', 'AVAILABLE');
+      final response =
+          await _client.from('rooms').select().eq('status', 'AVAILABLE');
       return (response as List).map((e) => RoomModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception('Lỗi lấy danh sách phòng trống: $e');
@@ -69,9 +77,16 @@ class TenantRepository {
     try {
       // 1. Lưu hợp đồng vào bảng 'contracts'
       await _client.from('contracts').insert(contract.toJson());
-      
+
       // 2. Cập nhật trạng thái phòng tương ứng
-      await _client.from('rooms').update({'status': 'OCCUPIED'}).eq('id', contract.roomId);
+      await _client
+          .from('rooms')
+          .update({'status': 'OCCUPIED'}).eq('id', contract.roomId);
+      await _client
+          .from('room_reservations')
+          .update({'status': 'CONVERTED'})
+          .eq('room_id', contract.roomId)
+          .eq('status', 'ACTIVE');
     } catch (e) {
       throw Exception('Lỗi khi ký hợp đồng: $e');
     }

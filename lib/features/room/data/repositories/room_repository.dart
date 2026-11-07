@@ -58,21 +58,25 @@ class RoomRepository {
   }) async {
     try {
       // 1. Lưu chỉ số mới
-      final readingResponse = await _client.from('utility_readings').insert({
-        'room_id': roomId,
-        'month_year': monthYear,
-        'old_elec': oldElec,
-        'new_elec': newElec,
-        'old_water': 0, 
-        'new_water': 0,
-        'reading_date': DateTime.now().toIso8601String(),
-      }).select().single();
+      final readingResponse = await _client
+          .from('utility_readings')
+          .insert({
+            'room_id': roomId,
+            'month_year': monthYear,
+            'old_elec': oldElec,
+            'new_elec': newElec,
+            'old_water': 0,
+            'new_water': 0,
+            'reading_date': DateTime.now().toIso8601String(),
+          })
+          .select()
+          .single();
 
       final int readingId = readingResponse['id'];
 
       // 2. Tính tiền điện và tổng cộng (mặc định +100k phí dịch vụ cố định)
       final double elecCharge = (newElec - oldElec) * elecRate;
-      final double total = roomCharge + elecCharge + 100000; 
+      final double total = roomCharge + elecCharge + 100000;
 
       // 3. Tạo hóa đơn liên kết với Hợp đồng và Chỉ số vừa ghi
       await _client.from('invoices').insert({
@@ -92,15 +96,25 @@ class RoomRepository {
 
   // --- CÁC HÀM CRUD KHÁC ---
   Future<List<PropertyModel>> getProperties() async {
-    final res = await _client.from('properties').select().order('created_at', ascending: false);
+    final res = await _client
+        .from('properties')
+        .select()
+        .order('created_at', ascending: false);
     return (res as List).map((e) => PropertyModel.fromJson(e)).toList();
   }
+
   Future<PropertyModel> addProperty(PropertyModel p) async {
-    final res = await _client.from('properties').insert(p.toJson()).select().single();
+    final res =
+        await _client.from('properties').insert(p.toJson()).select().single();
     return PropertyModel.fromJson(res);
   }
-  Future<void> updateProperty(int id, String n, String? a) async => await _client.from('properties').update({'name': n, 'address': a}).eq('id', id);
-  Future<void> deleteProperty(int id) async => await _client.from('properties').delete().eq('id', id);
+
+  Future<void> updateProperty(int id, String n, String? a) async =>
+      await _client
+          .from('properties')
+          .update({'name': n, 'address': a}).eq('id', id);
+  Future<void> deleteProperty(int id) async =>
+      await _client.from('properties').delete().eq('id', id);
 
   // ===========================================================================
   // CRUD PHÒNG TRỌ (ROOMS)
@@ -145,5 +159,52 @@ class RoomRepository {
     } catch (e) {
       throw Exception('Lỗi xóa phòng: $e');
     }
+  }
+
+  Future<void> createReservation(
+      {required int roomId,
+      required String tenantName,
+      required String phone,
+      required double amount,
+      required DateTime moveInDate}) async {
+    await _client.rpc('reserve_room', params: {
+      'p_room_id': roomId,
+      'p_tenant_name': tenantName,
+      'p_phone': phone,
+      'p_amount_paid': amount,
+      'p_move_in_date': moveInDate.toIso8601String().split('T').first,
+    });
+  }
+
+  Future<Map<String, dynamic>?> getActiveReservation(int roomId) async {
+    final rows = await _client
+        .from('room_reservations')
+        .select()
+        .eq('room_id', roomId)
+        .eq('status', 'ACTIVE')
+        .order('created_at', ascending: false)
+        .limit(1);
+    return (rows as List).isEmpty
+        ? null
+        : Map<String, dynamic>.from(rows.first as Map);
+  }
+
+  Future<void> markReservationConverted(int roomId) async {
+    await _client
+        .from('room_reservations')
+        .update({'status': 'CONVERTED'})
+        .eq('room_id', roomId)
+        .eq('status', 'ACTIVE');
+  }
+
+  Future<void> finishCheckout(
+      {required int roomId,
+      required int contractId,
+      required DateTime checkoutDate}) async {
+    await _client.rpc('finish_room_checkout', params: {
+      'p_room_id': roomId,
+      'p_contract_id': contractId,
+      'p_checkout_date': checkoutDate.toIso8601String().split('T').first,
+    });
   }
 }

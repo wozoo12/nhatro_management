@@ -57,6 +57,81 @@
 - [x] **Hoàn thiện Điều hướng (Navigation):** Bổ sung `AppBar` chuẩn và nút Quay lại (Back) cho màn hình Quản lý phòng (`DashboardView`).
 - [x] **E2E Flow Verified:** Luồng đi từ Tạo khách hàng -> Ký hợp đồng -> Khởi tạo Hóa đơn (Chốt điện) -> Gửi Zalo/VietQR thanh toán -> Đánh dấu Đã Thu Tiền đã hoạt động thông suốt 100%.
 
+### 10. Hoàn thiện 3 Tab Thanh điều hướng chính (Cập nhật 13/10/2026)
+- [x] **Tab CÔNG VIỆC (`TasksView`):**
+  - Quản lý công việc và nhắc nhở lịch hẹn với BLoC (`TaskCubit`, `TaskState`).
+  - Thanh đo tiến độ tổng quan (Cần làm / Đã xong).
+  - Bộ lọc danh mục theo Chip: Sự cố, Lịch hẹn, Thu tiền, Việc cá nhân.
+  - Checkbox đánh dấu hoàn thành nhanh, nút xóa, và `AddTaskBottomSheet` hỗ trợ tạo việc mới kèm thời hạn và mức độ ưu tiên.
+- [x] **Tab TÌM KHÁCH (`TenantFindingView`):**
+  - Quản lý tỷ lệ lấp đầy và phòng trống với BLoC (`TenantFindingCubit`, `TenantFindingState`).
+  - Sub-tab "Đăng tin phòng trống": Thẻ phòng trống với giá, diện tích, tiện nghi và mẫu tin đăng chuẩn SEO kèm nút sao chép 1-chạm hoặc chia sẻ qua Zalo/Facebook.
+  - Sub-tab "Khách tiềm năng (Leads CRM)": Quản lý danh sách người hỏi thuê phòng, ngày hẹn xem, nút gọi điện thoại trực tiếp (`url_launcher`), nhắn tin Zalo (`ZaloService`), và `AddLeadBottomSheet` để thêm khách mới.
+- [x] **Tab THÊM (`MoreView`):**
+  - Thẻ profile chủ nhà chuyên nghiệp ("Chủ trọ Pro").
+  - Menu gom nhóm khoa học: Quản lý & Vận hành (Ngân hàng/VietQR, Sổ quỹ, Tài sản, Sự cố), Tiện ích ngoại vi (Máy in nhiệt Bluetooth 58mm, Zalo ZNS, Mẫu nội quy trọ), Hệ thống & Bảo mật (Dark mode toggle, Sinh trắc học, Thông tin ứng dụng, Đăng xuất Supabase an toàn).
+- [x] **Sửa triệt để các lỗi Layout Pixel Overflow:**
+  - Tab "CÔNG VIỆC": Khắc phục lỗi `OVERFLOWED BY 20 PIXELS` trong thẻ công việc bằng cấu trúc Custom `Row` + `Expanded(Column)` + `Wrap` tags.
+  - Tab "TÌM KHÁCH" (Khách tiềm năng): Khắc phục lỗi `RIGHT OVERFLOWED BY 14 PIXELS` trên màn hình hẹp (360px-390px) bằng `Wrap` cho cụm phòng quan tâm & ngân sách, thêm `maxLines: 1` kèm `TextOverflow.ellipsis` cho tên khách và số phòng.
+
+### 11. Hoàn thiện các tính năng cốt lõi tại Tab TRANG CHỦ (Cập nhật 13/10/2026)
+- [x] **Top Header đa năng:**
+  - Nút **Quét QR**: Tích hợp `CccdScannerView` mở camera quét thẻ CCCD gắn chip, tự động hiển thị thông tin công dân và nút chuyển sang ký hợp đồng ngay.
+  - Dropdown tên nhà trọ & Icon Menu: Mở BottomSheet cho phép chuyển đổi tức thì giữa các nhà trọ trong danh sách hoặc bấm thêm nhà mới (`PropertyWizardView`).
+- [x] **Thanh lý / Trả phòng theo phòng thực tế (`SelectableCheckoutRoomsView`):**
+  - Thay thế việc hardcode phòng 101 bằng màn hình chọn phòng đang có khách thuê (`contract != null`).
+  - Truyền dữ liệu số phòng, giá thuê và tiền cọc thực tế vào `RoomCheckoutView` để quyết toán chính xác.
+- [x] **Cọc giữ chỗ & Ghi sổ quỹ thật (`AddDepositView`):**
+  - Bổ sung controller số điện thoại, kết nối `FinanceCubit.acceptDeposit` để ghi nhận giao dịch vào Sổ quỹ.
+  - Sau khi cọc, popup hiển thị thông tin tài khoản thật kèm nút **Chia sẻ** biên nhận cọc và nút **Gửi Zalo** trực tiếp cho khách thuê.
+- [x] **Tab Tổng quan tương tác thời gian thực:**
+  - Thẻ nhắc nhở "Hóa đơn chưa thu": Đếm số hóa đơn `UNPAID` từ `InvoiceBloc`, bấm vào mở `InvoiceListView`.
+  - Thẻ "Nợ tiền cần thu": Tính tổng số tiền các hóa đơn nợ thật, bấm vào mở `InvoiceListView`.
+  - Biểu đồ "Tỷ lệ lấp đầy" (`OccupancyPieChartWidget`): Tự động tính toán tỷ lệ % phòng đang thuê / phòng trống dựa trên số lượng phòng thực tế từ `RoomBloc`.
+
 ---
 **Developer:** Nguyễn Hoàng Sang
-**Cập nhật lần cuối:** 28/09/2026
+**Cập nhật lần cuối:** 13/10/2026
+
+## 12. Sửa lỗi theo đợt test LDPlayer (15/10/2026)
+- [x] **Sheet chọn loại hình nhà trọ:** Giới hạn chiều cao theo màn hình, thêm vùng an toàn và cuộn được để tránh `BOTTOM OVERFLOWED`.
+- [x] **Bản đồ chọn vị trí:** Thay placeholder bằng bản đồ OpenStreetMap có thể kéo/zoom, ghim vị trí ở tâm, tìm địa chỉ, lấy GPS và reverse geocoding. Lưu tọa độ cùng địa chỉ trong `properties`.
+- [x] **Cọc giữ chỗ:** Lưu thông tin người cọc/số điện thoại/tiền cọc/ngày dự kiến vào `room_reservations`; đổi trạng thái phòng sang `BOOKED` và biểu thị bằng xanh dương. Luồng nhận cọc gọi RPC để cập nhật trạng thái và tạo reservation trong một giao dịch.
+- [x] **Ký hợp đồng từ phòng đã cọc:** Danh sách ký hợp đồng gồm phòng trống và phòng đã cọc. Với phòng đã cọc, chỉ cho ký đúng người đặt cọc; tiền đã cọc được tính vào `actual_deposit`, màn hình hiển thị số đã nhận và số còn thiếu, khi ký thì chuyển reservation sang `CONVERTED` và phòng sang `OCCUPIED`.
+- [x] **Thanh lý hợp đồng:** Ghi hợp đồng thành `TERMINATED`, ngày kết thúc và đưa phòng về `AVAILABLE` bằng RPC; danh sách trả phòng hiển thị nhãn trạng thái thuê màu xanh lá. Sau khi xác nhận, dashboard được yêu cầu tải lại.
+- [x] **Quy ước màu theo thanh toán:** Phòng `BOOKED` hiển thị xanh dương; phòng đang thuê có hóa đơn chưa trả hiển thị đỏ, chỉ hóa đơn `PAID` mới hiển thị xanh lá trong lưới phòng.
+- [x] **Migration Supabase:** Người dùng xác nhận đã áp dụng `supabase/migrations/202610150001_room_reservations.sql` thành công.
+- [ ] **Kiểm thử lại trên LDPlayer và đánh dấu checklist E2E:** Chưa xác nhận bằng chạy thử sau các thay đổi này.
+
+## 13. Sửa tiếp lỗi phát sinh khi test Supabase/LDPlayer (15/10/2026)
+- [x] **Ràng buộc trạng thái phòng:** Bổ sung migration `202610150002_allow_booked_room_status.sql` để constraint `rooms_status_check` chấp nhận `BOOKED`. Ảnh test cho thấy lần nhận cọc trước bị rollback vì DB chưa cho phép trạng thái này.
+- [x] **Tải lại danh sách cọc:** `SelectableBookingRoomsView` tự tải lại dữ liệu tổng hợp theo nhà đang chọn khi mở và sau khi đóng form nhận cọc, không còn phụ thuộc dữ liệu còn sót trong `RoomBloc` sau màn hình ký hợp đồng.
+- [x] **Định dạng tiền:** Thêm phân cách hàng nghìn bằng dấu chấm cho ô nhận cọc, tiền cọc khi ký hợp đồng, tiền cọc phát sinh, ngân sách khách tiềm năng và giá thuê nhập tại các form đã rà soát.
+- [x] **Vị trí dự phòng:** Bổ sung chọn bằng tọa độ nhập tay, hỗ trợ nhập cặp vĩ độ/kinh độ vào tìm kiếm, cho phép chọn tọa độ khi tra địa chỉ mạng lỗi và hiển thị lỗi GPS cụ thể hơn.
+- [x] **Migration trạng thái phòng:** Người dùng xác nhận đã chạy `supabase/migrations/202610150002_allow_booked_room_status.sql` thành công sau migration `202610150001`.
+- [ ] **Cần thử lại trên LDPlayer:** Cấp quyền vị trí cho app và bật Location trong Android/LDPlayer; kiểm tra internet nếu bản đồ/tra cứu địa chỉ không tải.
+
+
+
+## 14. Theo dõi lần test tiếp theo trên LDPlayer (15/10/2026)
+- [x] Người dùng xác nhận đã cấp quyền vị trí cho LDPlayer/app và chạy migration `202610150002_allow_booked_room_status.sql` thành công.
+- [x] Người dùng xác nhận chọn ghim trực tiếp trên bản đồ được; thao tác nhập tọa độ thủ công còn lỗi.
+- [x] Bản đồ: tọa độ nhập bằng dấu phẩy thập phân được chuẩn hóa; truy vấn reverse-geocoding có timeout 8 giây và nút xác nhận tọa độ không còn bị khóa trong lúc đợi địa chỉ.
+- [x] Hợp đồng từ phòng đã cọc: hiển thị thẻ xanh dương tên/số điện thoại người cọc thay cho dropdown khách; khi lưu hợp đồng dùng đúng khách đã đặt cọc, tự tạo hồ sơ theo tên/số điện thoại nếu chưa có.
+- [x] Danh sách ký hợp đồng: phòng đã cọc có nhãn và màu xanh dương; phòng chưa cọc có nhãn màu đỏ.
+- [x] Thêm khách: đưa thao tác đóng form thành post-frame và bỏ tải danh sách trùng ngay trong BLoC; các màn hình cha tải lại sau khi form đóng để giảm xung đột vòng đời khi điều hướng.
+- [ ] Người dùng cần retest nhập tọa độ thủ công, hợp đồng với phòng đã cọc và thêm khách trên LDPlayer; ảnh hiện tại chưa có stack trace đầy đủ để xác nhận nguyên nhân duy nhất của assertion Flutter.
+
+## 15. Đồng bộ nhận diện giao diện theo ABC_Design (07/11/2026)
+- [x] Đọc quy tắc thương hiệu và đưa Inter cùng các thành phần theme vào app; sau đó khôi phục màu chủ đạo xanh lá theo yêu cầu người dùng. Bảng màu chạy thực tế được ghi ở mục 16.
+- [x] Đăng ký font Inter Medium/SemiBold/ExtraBold có sẵn từ `ABC_Design/assets/fonts` và đặt typography/theme dùng chung cho app.
+- [x] Đồng bộ màn hình trang chủ: header xanh lá, thẻ module bo góc/nhẹ, màu icon giới hạn theo bảng màu thương hiệu, điều hướng dùng màu chủ đạo.
+- [x] Đồng bộ màu trạng thái trong lưới phòng theo quy ước của bộ nhận diện.
+- [ ] Cần mở app trên LDPlayer và rà lại các màn hình chính/sáng tối; một số màn hình cũ có màu gán trực tiếp nên cần các lượt đồng bộ tiếp theo.
+
+## 16. Khôi phục màu chủ đạo xanh lá theo xác nhận của người dùng (07/11/2026)
+- [x] Đổi màu chính toàn app và các nút/hành động theo theme về `#2E7D32`; dark theme dùng xanh lá `#4CAF50`.
+- [x] Khôi phục nền xám sáng, màu chữ trung tính và các màu cũ của app; giữ quy ước trạng thái phòng xanh lá/đỏ/xanh dương/cam/xám.
+- [x] Đổi header trang chủ, tab đang chọn và thanh điều hướng từ navy về xanh lá.
+- [x] Cập nhật `ABC_Design/rules/brand.json` để bộ sinh ảnh dùng xanh lá làm màu LOZIDO, không còn navy là màu thương hiệu chính.
+- [ ] Người dùng cần chạy lại app và xác nhận màu xanh lá đã trở lại trên LDPlayer.

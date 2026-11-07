@@ -54,6 +54,10 @@ class PropertyWizardCubit extends Cubit<PropertyWizardState> {
   void toggleJobManagement(bool value) => emit(state.copyWith(findTenants: value));
   void toggleSms(bool value) => emit(state.copyWith(autoSms: value));
 
+  // Ảnh nhà trọ
+  void updateCoverImage(String path) => emit(state.copyWith(coverImagePath: path));
+  void clearImage() => emit(state.copyWith(clearCoverImage: true));
+
   void updateLocation(double lat, double lng, String address) {
     emit(state.copyWith(
       latitude: lat,

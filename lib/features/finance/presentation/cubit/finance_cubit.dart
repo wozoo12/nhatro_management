@@ -1,13 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/fund_record_model.dart';
 import 'finance_state.dart';
+import '../../../room/data/repositories/room_repository.dart';
 
 class FinanceCubit extends Cubit<FinanceState> {
-  FinanceCubit() : super(FinanceInitial());
+  final RoomRepository? _roomRepository;
+  FinanceCubit([this._roomRepository]) : super(FinanceInitial());
 
   // 1. NGHIỆP VỤ NHẬN CỌC GIỮ CHỖ
   Future<void> acceptDeposit({
     required String roomId,
+    int roomDatabaseId = 0,
     required String tenantName,
     required String phone,
     required double amount,
@@ -15,8 +18,14 @@ class FinanceCubit extends Cubit<FinanceState> {
   }) async {
     emit(FinanceLoading());
     try {
-      // Logic: 1. Gọi API cập nhật trạng thái phòng sang "RESERVED" (Đang cọc)
-      // Logic: 2. Tự động sinh bản ghi Sổ quỹ (Thu tiền cọc)
+      if (_roomRepository != null) {
+        await _roomRepository!.createReservation(
+            roomId: roomDatabaseId,
+            tenantName: tenantName,
+            phone: phone,
+            amount: amount,
+            moveInDate: moveInDate);
+      }
       final newRecord = FundRecordModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         title: "Thu tiền cọc giữ chỗ P.$roomId",
@@ -27,10 +36,9 @@ class FinanceCubit extends Cubit<FinanceState> {
         roomId: roomId,
         tenantName: tenantName,
       );
-      
-      // Giả lập lưu thành công
+
       emit(FinanceActionSuccess(
-        message: "Đã nhận cọc P.$roomId. Hệ thống đã tự động ghi sổ quỹ +$amountđ",
+        message: "Đã nhận và lưu khoản cọc P.$roomId: +$amountđ",
         fundRecord: newRecord,
       ));
     } catch (e) {
@@ -45,7 +53,7 @@ class FinanceCubit extends Cubit<FinanceState> {
   }) async {
     emit(FinanceLoading());
     try {
-      // Logic: 1. Đưa phòng về trạng thái "AVAILABLE"
+      // Hủy reservation qua luồng quản lý tương ứng.
       // Logic: 2. Nếu có hoàn tiền (> 0) -> Sinh bản ghi Sổ quỹ (Chi hoàn cọc)
       FundRecordModel? refundRecord;
       if (refundAmount > 0) {
@@ -60,7 +68,7 @@ class FinanceCubit extends Cubit<FinanceState> {
         );
         // Lưu record vào DB...
       }
-      
+
       emit(FinanceActionSuccess(
         message: "Đã hủy cọc P.$roomId. Phòng hiện đang trống.",
         fundRecord: refundRecord,

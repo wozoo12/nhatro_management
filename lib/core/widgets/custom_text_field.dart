@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final String? errorText;
   final bool isCurrency;
   final List<TextInputFormatter>? inputFormatters;
+  final int maxLines;
 
   const CustomTextField({
     super.key,
@@ -35,6 +36,7 @@ class CustomTextField extends StatelessWidget {
     this.errorText,
     this.isCurrency = false,
     this.inputFormatters,
+    this.maxLines = 1,
   });
 
   @override
@@ -46,22 +48,28 @@ class CustomTextField extends StatelessWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black87),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black87),
             ),
             if (isRequired)
-              const Text(" *", style: TextStyle(color: AppColors.dangerRed, fontWeight: FontWeight.bold)),
+              const Text(" *",
+                  style: TextStyle(
+                      color: AppColors.dangerRed, fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
           obscureText: obscureText,
+          maxLines: (isPassword || obscureText) ? 1 : maxLines,
           keyboardType: isCurrency ? TextInputType.number : keyboardType,
           onChanged: onChanged,
           inputFormatters: [
             if (isCurrency) ...[
               FilteringTextInputFormatter.digitsOnly,
-              _CurrencyInputFormatter(),
+              CurrencyInputFormatter(),
             ],
             if (inputFormatters != null) ...inputFormatters!,
           ],
@@ -69,13 +77,22 @@ class CustomTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             errorText: errorText,
-            hintStyle: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.normal),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+                fontWeight: FontWeight.normal),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             filled: true,
             fillColor: Colors.white,
             suffixIcon: isPassword
                 ? IconButton(
-                    icon: Icon(obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 20, color: Colors.grey),
+                    icon: Icon(
+                        obscureText
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 20,
+                        color: Colors.grey),
                     onPressed: onToggleVisibility,
                   )
                 : suffixIcon,
@@ -90,15 +107,18 @@ class CustomTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+              borderSide:
+                  const BorderSide(color: AppColors.primaryGreen, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.dangerRed, width: 1.0),
+              borderSide:
+                  const BorderSide(color: AppColors.dangerRed, width: 1.0),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.dangerRed, width: 1.5),
+              borderSide:
+                  const BorderSide(color: AppColors.dangerRed, width: 1.5),
             ),
           ),
         ),
@@ -107,9 +127,10 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-class _CurrencyInputFormatter extends TextInputFormatter {
+class CurrencyInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     }
@@ -134,7 +155,8 @@ class _CurrencyInputFormatter extends TextInputFormatter {
     // 4. Tìm vị trí con trỏ mới trong chuỗi đã định dạng dựa trên số lượng chữ số đã đếm
     int newCursorOffset = 0;
     int digitCount = 0;
-    while (digitCount < digitsBeforeCursor && newCursorOffset < formattedText.length) {
+    while (digitCount < digitsBeforeCursor &&
+        newCursorOffset < formattedText.length) {
       if (RegExp(r'[0-9]').hasMatch(formattedText[newCursorOffset])) {
         digitCount++;
       }

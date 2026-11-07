@@ -1,0 +1,29 @@
+{
+  "name": "LOZIDO",
+  "tagline": "Quản lý nhà trọ gọn gàng",
+  "_note": "Màu lấy theo quy ước trạng thái phòng trong app. Nếu seed color của app_theme.dart khác, sửa 'ink' và 'accent' ở đây.",
+  "colors": {
+    "ink": "#2E7D32",
+    "paper": "#F3F6F8",
+    "accent": "#4CAF50",
+    "muted": "#4A5B6C",
+    "white": "#FFFFFF"
+  },
+  "status": {
+    "PAID":        { "label": "Đã thu",   "color": "#17804F" },
+    "UNPAID":      { "label": "Chưa thu", "color": "#C93A3A" },
+    "BOOKED":      { "label": "Đã cọc",   "color": "#2563C9" },
+    "AVAILABLE":   { "label": "Trống",    "color": "#F4A62A" },
+    "MAINTENANCE": { "label": "Sửa chữa", "color": "#5B6B7B" }
+  },
+  "fonts": {
+    "title": "Inter-ExtraBold.otf",
+    "label": "Inter-SemiBold.otf",
+    "body": "Inter-Medium.otf"
+  },
+  "voice": {
+    "language": "vi",
+    "case": "sentence",
+    "forbidden": ["siêu", "số 1", "đỉnh cao", "cực sốc", "100%", "bá đạo"]
+  }
+}

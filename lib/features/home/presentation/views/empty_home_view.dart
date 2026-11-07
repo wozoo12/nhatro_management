@@ -185,8 +185,8 @@ class EmptyHomeView extends StatelessWidget {
       selectedItemColor: AppColors.primaryGreen,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Trang chủ"),
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: "Dịch vụ"),
-        BottomNavigationBarItem(icon: Icon(Icons.notifications_none), label: "Thông báo"),
+        BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: "Công việc"),
+        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Tìm khách"),
         BottomNavigationBarItem(icon: Icon(Icons.grid_view_rounded), label: "Thêm"),
       ],
     );

@@ -4,6 +4,8 @@ class PropertyModel {
   final String? userId; // Đổi sang String? để có thể null khi chưa đăng nhập
   final String name;
   final String? address;
+  final double? latitude;
+  final double? longitude;
   final DateTime createdAt;
 
   PropertyModel({
@@ -11,6 +13,8 @@ class PropertyModel {
     this.userId,
     required this.name,
     this.address,
+    this.latitude,
+    this.longitude,
     required this.createdAt,
   });
 
@@ -21,6 +25,8 @@ class PropertyModel {
       userId: json['user_id'] as String?, // Xử lý null an toàn
       name: json['name'] as String,
       address: json['address'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -30,6 +36,8 @@ class PropertyModel {
     return {
       'name': name,
       'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
       'user_id': userId, // Gửi null lên nếu chưa đăng nhập
     };
   }
@@ -39,6 +47,8 @@ class PropertyModel {
     String? userId,
     String? name,
     String? address,
+    double? latitude,
+    double? longitude,
     DateTime? createdAt,
   }) {
     return PropertyModel(
@@ -46,6 +56,8 @@ class PropertyModel {
       userId: userId ?? this.userId,
       name: name ?? this.name,
       address: address ?? this.address,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       createdAt: createdAt ?? this.createdAt,
     );
   }

@@ -44,7 +44,8 @@ class _TenantListViewState extends State<TenantListView> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Quản lý Khách thuê', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Quản lý Khách thuê',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -54,14 +55,15 @@ class _TenantListViewState extends State<TenantListView> {
         children: [
           // --- THANH TÌM KIẾM ---
           _buildSearchBox(),
-          
+
           // --- DANH SÁCH (Sử dụng BlocBuilder để cập nhật UI theo dữ liệu thật) ---
           Expanded(
             child: BlocBuilder<TenantBloc, TenantState>(
               builder: (context, state) {
                 // Hiển thị vòng xoay nếu đang tải
                 if (state is TenantLoading) {
-                  return const Center(child: CircularProgressIndicator(color: primaryBlue));
+                  return const Center(
+                      child: CircularProgressIndicator(color: primaryBlue));
                 }
 
                 // Hiển thị lỗi nếu có sự cố
@@ -70,11 +72,13 @@ class _TenantListViewState extends State<TenantListView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                        const Icon(Icons.error_outline,
+                            color: Colors.red, size: 48),
                         const SizedBox(height: 16),
                         Text('Lỗi: ${state.message}'),
                         TextButton(
-                          onPressed: () => context.read<TenantBloc>().add(FetchTenants()),
+                          onPressed: () =>
+                              context.read<TenantBloc>().add(FetchTenants()),
                           child: const Text('Thử lại'),
                         ),
                       ],
@@ -87,16 +91,18 @@ class _TenantListViewState extends State<TenantListView> {
                   // Logic lọc danh sách theo tên hoặc số điện thoại Sang nhập
                   final filtered = state.tenants.where((t) {
                     final query = _searchQuery.toLowerCase();
-                    return t.fullName.toLowerCase().contains(query) || 
-                           t.phone.contains(query);
+                    return t.fullName.toLowerCase().contains(query) ||
+                        t.phone.contains(query);
                   }).toList();
 
                   if (filtered.isEmpty) {
-                    return const Center(child: Text('Không có dữ liệu khách thuê.'));
+                    return const Center(
+                        child: Text('Không có dữ liệu khách thuê.'));
                   }
 
                   return RefreshIndicator(
-                    onRefresh: () async => context.read<TenantBloc>().add(FetchTenants()),
+                    onRefresh: () async =>
+                        context.read<TenantBloc>().add(FetchTenants()),
                     child: ListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: filtered.length,
@@ -116,15 +122,17 @@ class _TenantListViewState extends State<TenantListView> {
       ),
       // Nút nổi để mở màn hình Thêm khách thuê mới
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddTenantView()),
           );
+          if (context.mounted) context.read<TenantBloc>().add(FetchTenants());
         },
         backgroundColor: primaryBlue,
         icon: const Icon(Icons.person_add_alt_1_rounded, color: Colors.white),
-        label: const Text('Thêm khách', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text('Thêm khách',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -142,7 +150,9 @@ class _TenantListViewState extends State<TenantListView> {
           prefixIcon: const Icon(Icons.search, color: mutedText),
           filled: true,
           fillColor: backgroundColor,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none),
           contentPadding: const EdgeInsets.symmetric(vertical: 0),
         ),
       ),
@@ -156,7 +166,12 @@ class _TenantListViewState extends State<TenantListView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -165,26 +180,31 @@ class _TenantListViewState extends State<TenantListView> {
           backgroundColor: primaryBlue.withValues(alpha: 0.1),
           child: const Icon(Icons.person_rounded, color: primaryBlue, size: 28),
         ),
-        title: Text(tenant.fullName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        title: Text(tenant.fullName,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.phone_iphone_rounded, size: 14, color: mutedText),
+                const Icon(Icons.phone_iphone_rounded,
+                    size: 14, color: mutedText),
                 const SizedBox(width: 4),
-                Text(tenant.phone, style: const TextStyle(color: mutedText, fontSize: 13)),
+                Text(tenant.phone,
+                    style: const TextStyle(color: mutedText, fontSize: 13)),
               ],
             ),
             if (tenant.identityCard != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
-                child: Text('CCCD: ${tenant.identityCard}', style: const TextStyle(color: mutedText, fontSize: 12)),
+                child: Text('CCCD: ${tenant.identityCard}',
+                    style: const TextStyle(color: mutedText, fontSize: 12)),
               ),
           ],
         ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Color(0xFFCBD5E1)),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded,
+            size: 16, color: Color(0xFFCBD5E1)),
         onTap: () {
           // ĐIỀU HƯỚNG SANG CHI TIẾT KHÁCH THUÊ
           Navigator.push(

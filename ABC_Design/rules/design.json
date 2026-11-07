@@ -1,0 +1,18 @@
+{
+  "formats": { "post": [1080, 1350], "square": [1080, 1080], "story": [1080, 1920] },
+  "margin": 80,
+  "contrast_min": 4.5,
+  "title": { "max_chars": 80, "max_lines": 4, "font_size_max": 96, "font_size_min": 56, "line_height": 1.12 },
+  "sub": { "font_size": 34, "max_lines": 2, "max_chars": 120 },
+  "grid": { "tile_w": 280, "tile_h": 220, "gap": 20, "radius": 28,
+            "top_ratio": { "post": 0.57, "square": 0.60, "story": 0.62 } },
+  "rules": [
+    "Tiêu đề căn trái, viết hoa đầu câu, tối đa 80 ký tự và 4 dòng",
+    "Không viết HOA toàn bộ, không emoji, không dấu chấm than lặp",
+    "Mọi cặp chữ/nền đạt tương phản WCAG tối thiểu 4.5:1",
+    "Lề tối thiểu 80px; lưới phòng tràn mép phải và mép dưới",
+    "Chỉ dùng màu trong brand.json; màu trạng thái giữ đúng nghĩa như trong app",
+    "Chỉ dùng font Inter (ExtraBold / SemiBold / Medium)",
+    "Không dùng từ cường điệu trong danh sách forbidden"
+  ]
+}

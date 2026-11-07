@@ -1,0 +1,29 @@
+{
+  "title": "Đặt cọc giữ phòng rồi chuyển thành hợp đồng",
+  "theme": "deposit",
+  "checks": [
+    [
+      "ok",
+      "Độ dài tiêu đề 43/80 ký tự"
+    ],
+    [
+      "ok",
+      "Chủ đề: deposit (khớp: dat coc, giu phong, coc)"
+    ],
+    [
+      "ok",
+      "Dàn chữ: 3 dòng, cỡ 96px, căn trái, lề 80px"
+    ],
+    [
+      "ok",
+      "Tương phản tiêu đề 13.9:1"
+    ],
+    [
+      "ok",
+      "Tương phản chữ trên ô phòng thấp nhất 5.0:1"
+    ]
+  ],
+  "files": [
+    "/mnt/user-data/outputs/ABC_Design/output/dat-coc-giu-phong-roi-chuyen-thanh-hop-dong_post.png"
+  ]
+}

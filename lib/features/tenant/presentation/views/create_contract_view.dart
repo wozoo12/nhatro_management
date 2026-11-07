@@ -10,8 +10,10 @@ import '../../data/models/contract_model.dart';
 import '../../data/models/cccd_qr_model.dart';
 import '../../data/repositories/tenant_repository.dart';
 import '../../../room/data/models/room_model.dart';
+import '../../../room/data/repositories/room_repository.dart';
 import 'cccd_scanner_view.dart';
 import 'add_tenant_view.dart';
+import '../../../../core/widgets/custom_text_field.dart';
 
 /// [CreateContractView] cho phép chủ trọ ký hợp đồng mới cho một phòng trống.
 /// Sau khi ký thành công, trạng thái phòng sẽ tự động chuyển sang "Đã thuê".
@@ -28,10 +30,12 @@ class _CreateContractViewState extends State<CreateContractView> {
   // --- QUẢN LÝ TRẠNG THÁI FORM ---
   final _formKey = GlobalKey<FormState>();
   final _depositController = TextEditingController();
-  
-  int? _selectedTenantId;    // Khách thuê được chọn
+
+  int? _selectedTenantId; // Khách thuê được chọn
   DateTime _startDate = DateTime.now(); // Ngày bắt đầu hợp đồng
   CccdQrModel? _scannedCccd;
+  Map<String, dynamic>? _reservation;
+  double _reservedAmount = 0;
 
   // --- THIẾT KẾ ---
   static const Color primaryBlue = Color(0xFF2E7D32);
@@ -43,7 +47,32 @@ class _CreateContractViewState extends State<CreateContractView> {
     // Tải danh sách khách thuê ngay khi mở màn hình để người dùng chọn
     context.read<TenantBloc>().add(FetchTenants());
     // Mặc định tiền cọc bằng số tiền cọc mặc định của phòng
-    _depositController.text = widget.room.depositDefault.toStringAsFixed(0);
+    _depositController.text = NumberFormat.decimalPattern('vi_VN')
+        .format(widget.room.depositDefault.round());
+    _loadReservation();
+  }
+
+  Future<void> _loadReservation() async {
+    if (widget.room.status != RoomStatus.BOOKED) return;
+    try {
+      final reservation = await context
+          .read<RoomRepository>()
+          .getActiveReservation(widget.room.id);
+      if (!mounted || reservation == null) return;
+      setState(() {
+        _reservation = reservation;
+        _reservedAmount = (reservation['amount_paid'] as num).toDouble();
+        _depositController.text = NumberFormat.decimalPattern('vi_VN').format(
+            (widget.room.depositDefault - _reservedAmount)
+                .clamp(0, double.infinity)
+                .round());
+      });
+      _selectReservedTenant();
+    } catch (e) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Không tải được thông tin cọc: $e')));
+    }
   }
 
   /// Hàm mở cửa sổ chọn ngày (DatePicker)
@@ -60,20 +89,69 @@ class _CreateContractViewState extends State<CreateContractView> {
   }
 
   /// Thực hiện gửi yêu cầu ký hợp đồng
-  void _submitContract() {
+  Future<void> _submitContract() async {
     if (_formKey.currentState!.validate()) {
-      if (_selectedTenantId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vui lòng chọn khách thuê!')));
+      if (_selectedTenantId == null && _reservation == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Vui lòng chọn khách thuê!')));
         return;
       }
 
-      final double deposit = double.tryParse(_depositController.text) ?? 0;
+      var tenantId = _selectedTenantId;
+      if (_reservation != null && tenantId != null) {
+        final loaded = context.read<TenantBloc>().state;
+        final tenants =
+            loaded is TenantLoaded ? loaded.tenants : <TenantModel>[];
+        TenantModel? selected;
+        for (final tenant in tenants) {
+          if (tenant.id == tenantId) {
+            selected = tenant;
+            break;
+          }
+        }
+        if (selected == null || selected.phone != _reservation!['phone']) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content:
+                  Text('Phòng đã cọc. Hãy chọn đúng người đã cọc giữ chỗ.')));
+          return;
+        }
+      }
+      if (tenantId == null && _reservation != null) {
+        final phone = _reservation!['phone'] as String;
+        final loaded = context.read<TenantBloc>().state;
+        final tenants =
+            loaded is TenantLoaded ? loaded.tenants : <TenantModel>[];
+        TenantModel? existing;
+        for (final tenant in tenants) {
+          if (tenant.phone == phone) {
+            existing = tenant;
+            break;
+          }
+        }
+        if (existing != null) {
+          tenantId = existing.id;
+        } else {
+          final created =
+              await context.read<TenantRepository>().addTenant(TenantModel(
+                    id: 0,
+                    fullName: _reservation!['tenant_name'] as String,
+                    phone: phone,
+                    createdAt: DateTime.now(),
+                  ));
+          if (!mounted) return;
+          tenantId = created.id;
+        }
+      }
+      final additionalDeposit = double.tryParse(
+              _depositController.text.replaceAll(RegExp(r'[^0-9]'), '')) ??
+          0;
+      final double deposit = additionalDeposit + _reservedAmount;
 
       // Tạo đối tượng hợp đồng mới theo Schema 3NF
       final newContract = ContractModel(
         id: 0, // Database tự tăng
         roomId: widget.room.id,
-        representativeTenantId: _selectedTenantId!,
+        representativeTenantId: tenantId!,
         startDate: _startDate,
         actualDeposit: deposit,
         status: ContractStatus.ACTIVE, // Trạng thái ban đầu là hiệu lực
@@ -82,6 +160,19 @@ class _CreateContractViewState extends State<CreateContractView> {
 
       // Gửi sự kiện tới BLoC
       context.read<TenantBloc>().add(CreateContract(newContract));
+    }
+  }
+
+  void _selectReservedTenant() {
+    if (_reservation == null) return;
+    final current = context.read<TenantBloc>().state;
+    if (current is! TenantLoaded) return;
+    final phone = _reservation!['phone'] as String;
+    for (final tenant in current.tenants) {
+      if (tenant.phone == phone) {
+        setState(() => _selectedTenantId = tenant.id);
+        return;
+      }
     }
   }
 
@@ -96,18 +187,24 @@ class _CreateContractViewState extends State<CreateContractView> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Ký hợp đồng mới', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Ký hợp đồng mới',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: BlocListener<TenantBloc, TenantState>(
         listener: (context, state) {
+          if (state is TenantLoaded && state.message == null) {
+            _selectReservedTenant();
+          }
           if (state is TenantLoaded && state.message != null) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message!)));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message!)));
             // Thành công thì quay về Dashboard (Dashboard sẽ tự tải lại dữ liệu mới)
             Navigator.of(context).popUntil((route) => route.isFirst);
           }
           if (state is TenantError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.message), backgroundColor: Colors.red));
           }
         },
         child: SingleChildScrollView(
@@ -119,32 +216,63 @@ class _CreateContractViewState extends State<CreateContractView> {
               children: [
                 // THẺ THÔNG TIN PHÒNG (READ-ONLY)
                 _buildInfoCard('Thông tin phòng', [
-                  _infoRow('Số phòng:', 'Phòng ${widget.room.roomNumber}', isBold: true),
-                  _infoRow('Giá thuê:', '${NumberFormat.currency(locale: 'vi_VN', symbol: 'đ').format(widget.room.basePrice)}/tháng'),
+                  _infoRow('Số phòng:', 'Phòng ${widget.room.roomNumber}',
+                      isBold: true),
+                  _infoRow('Giá thuê:',
+                      '${NumberFormat.currency(locale: 'vi_VN', symbol: 'đ').format(widget.room.basePrice)}/tháng'),
                 ]),
+                if (_reservation != null) ...[
+                  const SizedBox(height: 12),
+                  _buildInfoCard('Thông tin cọc giữ chỗ', [
+                    _infoRow(
+                        'Người cọc:', _reservation!['tenant_name'] as String,
+                        isBold: true),
+                    _infoRow(
+                        'Đã nhận:',
+                        NumberFormat.currency(locale: 'vi_VN', symbol: 'đ')
+                            .format(_reservedAmount)),
+                    _infoRow(
+                        'Còn thiếu:',
+                        NumberFormat.currency(locale: 'vi_VN', symbol: 'đ')
+                            .format(
+                                (widget.room.depositDefault - _reservedAmount)
+                                    .clamp(0, double.infinity))),
+                  ]),
+                ],
 
                 const SizedBox(height: 24),
                 _buildSectionTitle('Chọn khách thuê đại diện'),
-                
+
                 // Ô CHỌN KHÁCH THUÊ
-                _buildTenantSelector(),
+                if (_reservation != null)
+                  _buildReservedTenantCard()
+                else
+                  _buildTenantSelector(),
 
                 const SizedBox(height: 24),
                 _buildSectionTitle('Chi tiết hợp đồng'),
-                
+
                 // THẺ NHẬP LIỆU
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16)),
                   child: Column(
                     children: [
                       // Chọn ngày bắt đầu
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.calendar_today_rounded, color: primaryBlue),
-                        title: const Text('Ngày bắt đầu ở', style: TextStyle(fontSize: 14)),
-                        trailing: Text(DateFormat('dd/MM/yyyy').format(_startDate), 
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: primaryBlue)),
+                        leading: const Icon(Icons.calendar_today_rounded,
+                            color: primaryBlue),
+                        title: const Text('Ngày bắt đầu ở',
+                            style: TextStyle(fontSize: 14)),
+                        trailing: Text(
+                            DateFormat('dd/MM/yyyy').format(_startDate),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: primaryBlue)),
                         onTap: () => _selectDate(context),
                       ),
                       const Divider(),
@@ -152,12 +280,18 @@ class _CreateContractViewState extends State<CreateContractView> {
                       TextFormField(
                         controller: _depositController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Số tiền cọc thực tế (đ)',
-                          prefixIcon: Icon(Icons.payments_outlined, color: primaryBlue),
+                        inputFormatters: [CurrencyInputFormatter()],
+                        decoration: InputDecoration(
+                          labelText: _reservation == null
+                              ? 'Số tiền cọc thực tế (đ)'
+                              : 'Nộp thêm tiền cọc (đ)',
+                          prefixIcon:
+                              Icon(Icons.payments_outlined, color: primaryBlue),
                           border: InputBorder.none,
                         ),
-                        validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập tiền cọc' : null,
+                        validator: (v) => (v == null || v.isEmpty)
+                            ? 'Vui lòng nhập tiền cọc'
+                            : null,
                       ),
                     ],
                   ),
@@ -177,7 +311,11 @@ class _CreateContractViewState extends State<CreateContractView> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8),
-      child: Text(title.toUpperCase(), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF64748B))),
+      child: Text(title.toUpperCase(),
+          style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF64748B))),
     );
   }
 
@@ -186,11 +324,16 @@ class _CreateContractViewState extends State<CreateContractView> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: primaryBlue)),
+          Text(title,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: primaryBlue)),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -205,7 +348,10 @@ class _CreateContractViewState extends State<CreateContractView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
-          Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal, fontSize: 14)),
+          Text(value,
+              style: TextStyle(
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 14)),
         ],
       ),
     );
@@ -232,17 +378,20 @@ class _CreateContractViewState extends State<CreateContractView> {
 
     // Tìm theo số CCCD hoặc họ tên
     final existing = currentTenants.cast<TenantModel?>().firstWhere(
-      (t) => (t?.identityCard != null && t!.identityCard == result.cccdNumber) ||
-             (t?.fullName.toLowerCase() == result.fullName.toLowerCase()),
-      orElse: () => null,
-    );
+          (t) =>
+              (t?.identityCard != null &&
+                  t!.identityCard == result.cccdNumber) ||
+              (t?.fullName.toLowerCase() == result.fullName.toLowerCase()),
+          orElse: () => null,
+        );
 
     if (existing != null) {
       setState(() => _selectedTenantId = existing.id);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Đã nhận diện và chọn khách thuê: ${existing.fullName}'),
+            content:
+                Text('Đã nhận diện và chọn khách thuê: ${existing.fullName}'),
             backgroundColor: AppColors.primaryGreen,
             behavior: SnackBarBehavior.floating,
           ),
@@ -267,7 +416,8 @@ class _CreateContractViewState extends State<CreateContractView> {
           children: [
             Icon(Icons.person_add_alt_1, color: AppColors.primaryGreen),
             SizedBox(width: 8),
-            Text('Tạo nhanh khách thuê', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('Tạo nhanh khách thuê',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ],
         ),
         content: Form(
@@ -276,11 +426,15 @@ class _CreateContractViewState extends State<CreateContractView> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Họ tên: ${cccd.fullName}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              Text('Họ tên: ${cccd.fullName}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 15)),
               const SizedBox(height: 4),
-              Text('Số CCCD: ${cccd.cccdNumber}', style: const TextStyle(color: Colors.black87, fontSize: 13)),
+              Text('Số CCCD: ${cccd.cccdNumber}',
+                  style: const TextStyle(color: Colors.black87, fontSize: 13)),
               const SizedBox(height: 4),
-              Text('Thường trú: ${cccd.address}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+              Text('Thường trú: ${cccd.address}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12)),
               const SizedBox(height: 16),
               TextFormField(
                 controller: phoneCtrl,
@@ -289,18 +443,24 @@ class _CreateContractViewState extends State<CreateContractView> {
                 decoration: InputDecoration(
                   labelText: 'Số điện thoại *',
                   hintText: 'Nhập số điện thoại liên hệ',
-                  prefixIcon: const Icon(Icons.phone_android, color: AppColors.primaryGreen),
+                  prefixIcon: const Icon(Icons.phone_android,
+                      color: AppColors.primaryGreen),
                   filled: true,
                   fillColor: const Color(0xFFF1F5F9),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
-                validator: (v) => (v == null || v.trim().length < 10) ? 'Vui lòng nhập SĐT hợp lệ' : null,
+                validator: (v) => (v == null || v.trim().length < 10)
+                    ? 'Vui lòng nhập SĐT hợp lệ'
+                    : null,
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Hủy')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Hủy')),
           ElevatedButton(
             onPressed: () async {
               if (formKey.currentState!.validate()) {
@@ -322,7 +482,8 @@ class _CreateContractViewState extends State<CreateContractView> {
                     setState(() => _selectedTenantId = created.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Đã tạo khách thuê ${created.fullName} và chọn vào hợp đồng!'),
+                        content: Text(
+                            'Đã tạo khách thuê ${created.fullName} và chọn vào hợp đồng!'),
                         backgroundColor: AppColors.primaryGreen,
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -331,7 +492,9 @@ class _CreateContractViewState extends State<CreateContractView> {
                 } catch (e) {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Lỗi tạo khách thuê: $e'), backgroundColor: Colors.red),
+                      SnackBar(
+                          content: Text('Lỗi tạo khách thuê: $e'),
+                          backgroundColor: Colors.red),
                     );
                   }
                 }
@@ -340,7 +503,8 @@ class _CreateContractViewState extends State<CreateContractView> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryGreen,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
             child: const Text('Tạo & Chọn'),
           ),
@@ -376,12 +540,16 @@ class _CreateContractViewState extends State<CreateContractView> {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     child: Row(
                       children: [
-                        Icon(Icons.qr_code_scanner_rounded, color: Colors.white, size: 24),
+                        Icon(Icons.qr_code_scanner_rounded,
+                            color: Colors.white, size: 24),
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             'Quét mã QR CCCD của khách thuê',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
                           ),
                         ),
                         Icon(Icons.chevron_right, color: Colors.white70),
@@ -395,27 +563,37 @@ class _CreateContractViewState extends State<CreateContractView> {
             // Dropdown chọn khách có sẵn
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(16)),
               child: Row(
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<int>(
                       value: _selectedTenantId,
                       isExpanded: true, // Chống tràn viền chữ
-                      hint: const Text('Hoặc chọn từ danh sách khách cũ', overflow: TextOverflow.ellipsis),
+                      hint: const Text('Hoặc chọn từ danh sách khách cũ',
+                          overflow: TextOverflow.ellipsis),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
-                        prefixIcon: Icon(Icons.person_search_rounded, color: primaryBlue),
+                        prefixIcon: Icon(Icons.person_search_rounded,
+                            color: primaryBlue),
                       ),
-                      items: tenants.map((t) => DropdownMenuItem(value: t.id, child: Text(t.fullName))).toList(),
-                      onChanged: (val) => setState(() => _selectedTenantId = val),
+                      items: tenants
+                          .map((t) => DropdownMenuItem(
+                              value: t.id, child: Text(t.fullName)))
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => _selectedTenantId = val),
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.person_add_alt, color: primaryBlue),
                     tooltip: 'Thêm khách thuê mới thủ công',
                     onPressed: () async {
-                      await Navigator.push(context, MaterialPageRoute(builder: (_) => const AddTenantView()));
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const AddTenantView()));
                       if (context.mounted) {
                         context.read<TenantBloc>().add(FetchTenants());
                       }
@@ -428,20 +606,26 @@ class _CreateContractViewState extends State<CreateContractView> {
             if (_scannedCccd != null) ...[
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: AppColors.mintBg,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.primaryGreen.withValues(alpha: 0.3)),
+                  border: Border.all(
+                      color: AppColors.primaryGreen.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.verified, color: AppColors.primaryGreen, size: 16),
+                    const Icon(Icons.verified,
+                        color: AppColors.primaryGreen, size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Đã xác thực CCCD: ${_scannedCccd!.fullName} - ${_scannedCccd!.cccdNumber}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.primaryGreen, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primaryGreen,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -451,6 +635,43 @@ class _CreateContractViewState extends State<CreateContractView> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildReservedTenantCard() {
+    final name = _reservation?['tenant_name'] as String? ?? '';
+    final phone = _reservation?['phone'] as String? ?? '';
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF3FF),
+        borderRadius: BorderRadius.circular(16),
+        border:
+            Border.all(color: const Color(0xFF2F80ED).withValues(alpha: .35)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.verified_user, color: Color(0xFF2F80ED)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Khách đã đặt cọc',
+                    style: TextStyle(
+                        color: Color(0xFF2F80ED), fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(phone, style: const TextStyle(color: AppColors.grayText)),
+                const SizedBox(height: 4),
+                const Text('Thông tin này sẽ được dùng cho hợp đồng.',
+                    style: TextStyle(fontSize: 12, color: AppColors.grayText)),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -467,12 +688,15 @@ class _CreateContractViewState extends State<CreateContractView> {
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryBlue,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               elevation: 0,
             ),
             child: isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text('XÁC NHẬN KÝ HỢP ĐỒNG', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                : const Text('XÁC NHẬN KÝ HỢP ĐỒNG',
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           ),
         );
       },

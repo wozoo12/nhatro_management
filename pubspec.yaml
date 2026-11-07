@@ -25,6 +25,10 @@ dependencies:
   print_bluetooth_thermal: ^1.2.1
   fl_chart: ^1.2.0
   lottie: ^3.6.1
+  flutter_map: ^8.3.2
+  latlong2: ^0.9.1
+  geolocator: ^14.0.2
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +37,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: ABC_Design/assets/fonts/Inter-Medium.otf
+          weight: 500
+        - asset: ABC_Design/assets/fonts/Inter-SemiBold.otf
+          weight: 600
+        - asset: ABC_Design/assets/fonts/Inter-ExtraBold.otf
+          weight: 800

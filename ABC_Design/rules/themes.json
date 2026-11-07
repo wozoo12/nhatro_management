@@ -1,0 +1,33 @@
+{
+  "_note": "Từ khóa viết KHÔNG dấu, chữ thường. Chủ đề nào khớp nhiều từ khóa nhất sẽ thắng.",
+  "themes": {
+    "billing": {
+      "keywords": ["hoa don", "thu tien", "vietqr", "qr", "tien phong", "thanh toan", "dien nuoc", "chot so", "cong no"],
+      "weights": { "PAID": 5, "UNPAID": 3, "AVAILABLE": 1, "BOOKED": 1 }
+    },
+    "contract": {
+      "keywords": ["hop dong", "gia han", "cccd", "khach thue", "ky hop dong"],
+      "weights": { "PAID": 4, "UNPAID": 2, "BOOKED": 2, "AVAILABLE": 1 }
+    },
+    "deposit": {
+      "keywords": ["dat coc", "giu phong", "coc", "dat phong"],
+      "weights": { "BOOKED": 6, "PAID": 2, "AVAILABLE": 2, "UNPAID": 1 }
+    },
+    "checkout": {
+      "keywords": ["tra phong", "thanh ly", "ket thuc hop dong", "hoan coc"],
+      "weights": { "AVAILABLE": 5, "PAID": 3, "UNPAID": 1, "MAINTENANCE": 1 }
+    },
+    "leads": {
+      "keywords": ["tim khach", "cho thue", "khach moi", "dang tin", "phong trong", "tin cho thue"],
+      "weights": { "AVAILABLE": 6, "BOOKED": 2, "PAID": 2 }
+    },
+    "maintenance": {
+      "keywords": ["sua chua", "bao tri", "su co", "cong viec", "bao hong"],
+      "weights": { "MAINTENANCE": 5, "PAID": 3, "AVAILABLE": 1, "UNPAID": 1 }
+    },
+    "general": {
+      "keywords": [],
+      "weights": { "PAID": 3, "UNPAID": 2, "BOOKED": 2, "AVAILABLE": 2, "MAINTENANCE": 1 }
+    }
+  }
+}

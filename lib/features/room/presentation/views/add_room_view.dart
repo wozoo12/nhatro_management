@@ -17,7 +17,8 @@ class _AddRoomViewState extends State<AddRoomView> {
     return Scaffold(
       backgroundColor: AppColors.lightGrayBg,
       appBar: AppBar(
-        title: const Text("Thêm phòng mới", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text("Thêm phòng mới",
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -28,7 +29,8 @@ class _AddRoomViewState extends State<AddRoomView> {
             _buildCard(
               child: Column(
                 children: [
-                  const CustomTextField(label: "Tên phòng trọ *", hintText: "Ví dụ: Phòng số 1"),
+                  const CustomTextField(
+                      label: "Tên phòng trọ *", hintText: "Ví dụ: Phòng số 1"),
                   const SizedBox(height: 16),
                   _buildDropdown("Nhóm (Tầng/dãy/khu) *", "Chọn tầng"),
                 ],
@@ -42,13 +44,25 @@ class _AddRoomViewState extends State<AddRoomView> {
                 children: [
                   Row(
                     children: [
-                      const Expanded(child: CustomTextField(label: "Diện tích", hintText: "15", suffixWidget: Text("m2"))),
+                      const Expanded(
+                          child: CustomTextField(
+                              label: "Diện tích",
+                              hintText: "15",
+                              suffixWidget: Text("m2"))),
                       const SizedBox(width: 12),
-                      Expanded(child: CustomTextField(label: "Giá thuê", hintText: "3.500.000", suffixWidget: Text("đ/tháng"))),
+                      Expanded(
+                          child: CustomTextField(
+                              label: "Giá thuê",
+                              hintText: "3.500.000",
+                              isCurrency: true,
+                              suffixWidget: Text("đ/tháng"))),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const CustomTextField(label: "Ngày lập hóa đơn", hintText: "1", suffixWidget: Text("Ngày")),
+                  const CustomTextField(
+                      label: "Ngày lập hóa đơn",
+                      hintText: "1",
+                      suffixWidget: Text("Ngày")),
                 ],
               ),
             ),
@@ -62,17 +76,22 @@ class _AddRoomViewState extends State<AddRoomView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Dịch vụ sử dụng", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text("Dịch vụ sử dụng",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       IconButton(
                         onPressed: () => _openServicePicker(context),
-                        icon: const Icon(Icons.add_circle, color: AppColors.primaryGreen),
+                        icon: const Icon(Icons.add_circle,
+                            color: AppColors.primaryGreen),
                       ),
                     ],
                   ),
                   if (_selectedServices.isEmpty)
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Center(child: Text("Chưa có dịch vụ nào được áp dụng", style: TextStyle(color: Colors.grey, fontSize: 13))),
+                      child: Center(
+                          child: Text("Chưa có dịch vụ nào được áp dụng",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 13))),
                     )
                   else
                     ..._selectedServices.map((s) => _buildServiceItem(s)),
@@ -89,7 +108,8 @@ class _AddRoomViewState extends State<AddRoomView> {
   Widget _buildCard({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(16)),
       child: child,
     );
   }
@@ -98,14 +118,20 @@ class _AddRoomViewState extends State<AddRoomView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        Text(label,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(value), const Icon(Icons.keyboard_arrow_down, color: Colors.grey)],
+            children: [
+              Text(value),
+              const Icon(Icons.keyboard_arrow_down, color: Colors.grey)
+            ],
           ),
         ),
       ],
@@ -116,8 +142,10 @@ class _AddRoomViewState extends State<AddRoomView> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Icon(service['icon'], color: AppColors.primaryGreen),
-      title: Text(service['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-      subtitle: Text("Chỉ số: ${service['value']} • Đơn giá: ${service['price']}"),
+      title: Text(service['name'],
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+      subtitle:
+          Text("Chỉ số: ${service['value']} • Đơn giá: ${service['price']}"),
       trailing: const Icon(Icons.check_circle, color: AppColors.primaryGreen),
     );
   }
@@ -127,13 +155,15 @@ class _AddRoomViewState extends State<AddRoomView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => Container(
         height: MediaQuery.of(context).size.height * 0.7,
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const Text("Gán dịch vụ phòng", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text("Gán dịch vụ phòng",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 20),
             _servicePickerTile("Tiền điện", Icons.flash_on, "3.500 đ/KWh"),
             _servicePickerTile("Tiền nước", Icons.opacity, "18.000 đ/Khối"),
@@ -142,16 +172,24 @@ class _AddRoomViewState extends State<AddRoomView> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  _selectedServices.add({'name': 'Tiền điện', 'icon': Icons.flash_on, 'value': '0', 'price': '3.500'});
+                  _selectedServices.add({
+                    'name': 'Tiền điện',
+                    'icon': Icons.flash_on,
+                    'value': '0',
+                    'price': '3.500'
+                  });
                 });
                 Navigator.pop(ctx);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryGreen,
                 minimumSize: const Size(double.infinity, 52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text("Áp dụng dịch vụ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: const Text("Áp dụng dịch vụ",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -175,13 +213,19 @@ class _AddRoomViewState extends State<AddRoomView> {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          Expanded(child: OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text("Đóng"))),
+          Expanded(
+              child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Đóng"))),
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryGreen),
-              child: const Text("+ Thêm phòng", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryGreen),
+              child: const Text("+ Thêm phòng",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ),
         ],

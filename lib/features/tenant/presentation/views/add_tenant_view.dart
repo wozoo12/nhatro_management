@@ -31,7 +31,7 @@ class _AddTenantViewState extends State<AddTenantView> {
 
   // --- QUẢN LÝ HÌNH ẢNH ---
   File? _frontImage; // Lưu file ảnh mặt trước CCCD
-  File? _backImage;  // Lưu file ảnh mặt sau CCCD
+  File? _backImage; // Lưu file ảnh mặt sau CCCD
   final ImagePicker _picker = ImagePicker();
 
   // --- HỆ THỐNG MÀU SẮC ---
@@ -44,7 +44,8 @@ class _AddTenantViewState extends State<AddTenantView> {
   Future<void> _pickImage(bool isFront) async {
     try {
       final XFile? pickedFile = await _picker.pickImage(
-        source: ImageSource.gallery, // Tạm thời dùng Thư viện thay vì Camera để test trên máy ảo
+        source: ImageSource
+            .gallery, // Tạm thời dùng Thư viện thay vì Camera để test trên máy ảo
         imageQuality: 70,
       );
 
@@ -83,7 +84,9 @@ class _AddTenantViewState extends State<AddTenantView> {
               children: [
                 const Icon(Icons.check_circle, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
-                Expanded(child: Text('Đã nhận diện: ${result.fullName} (${result.cccdNumber})')),
+                Expanded(
+                    child: Text(
+                        'Đã nhận diện: ${result.fullName} (${result.cccdNumber})')),
               ],
             ),
             backgroundColor: AppColors.primaryGreen,
@@ -108,10 +111,10 @@ class _AddTenantViewState extends State<AddTenantView> {
 
       // 2. Gửi sự kiện AddTenant tới Bloc kèm theo các file ảnh đã chụp
       context.read<TenantBloc>().add(AddTenant(
-        tenant: newTenant,
-        frontCard: _frontImage,
-        backCard: _backImage,
-      ));
+            tenant: newTenant,
+            frontCard: _frontImage,
+            backCard: _backImage,
+          ));
     }
   }
 
@@ -128,7 +131,8 @@ class _AddTenantViewState extends State<AddTenantView> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Thêm khách thuê mới', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Thêm khách thuê mới',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
@@ -138,12 +142,16 @@ class _AddTenantViewState extends State<AddTenantView> {
         listener: (context, state) {
           // Lắng nghe trạng thái thành công để quay về màn hình trước
           if (state is TenantLoaded && state.message != null) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Đã thêm khách thuê thành công!')));
-            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Đã thêm khách thuê thành công!')));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) Navigator.of(context).pop(true);
+            });
           }
           // Lắng nghe lỗi để thông báo
           if (state is TenantError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.message), backgroundColor: Colors.red));
           }
         },
         child: SingleChildScrollView(
@@ -178,8 +186,12 @@ class _AddTenantViewState extends State<AddTenantView> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8),
-      child: Text(title.toUpperCase(), 
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: mutedText, letterSpacing: 0.5)),
+      child: Text(title.toUpperCase(),
+          style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: mutedText,
+              letterSpacing: 0.5)),
     );
   }
 
@@ -190,7 +202,9 @@ class _AddTenantViewState extends State<AddTenantView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)
+        ],
       ),
       child: Column(
         children: [
@@ -198,7 +212,8 @@ class _AddTenantViewState extends State<AddTenantView> {
             controller: _nameController,
             label: 'Họ và tên',
             icon: Icons.person_outline,
-            validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập tên' : null,
+            validator: (v) =>
+                (v == null || v.isEmpty) ? 'Vui lòng nhập tên' : null,
           ),
           const SizedBox(height: 16),
           _buildTextField(
@@ -206,7 +221,9 @@ class _AddTenantViewState extends State<AddTenantView> {
             label: 'Số điện thoại',
             icon: Icons.phone_android_outlined,
             keyboardType: TextInputType.phone,
-            validator: (v) => (v == null || v.length < 10) ? 'Số điện thoại không hợp lệ' : null,
+            validator: (v) => (v == null || v.length < 10)
+                ? 'Số điện thoại không hợp lệ'
+                : null,
           ),
           const SizedBox(height: 16),
           _buildTextField(
@@ -236,7 +253,9 @@ class _AddTenantViewState extends State<AddTenantView> {
         prefixIcon: Icon(icon, size: 22, color: primaryBlue),
         filled: true,
         fillColor: const Color(0xFFF1F5F9),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none),
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
       ),
     );
@@ -246,15 +265,20 @@ class _AddTenantViewState extends State<AddTenantView> {
   Widget _buildImageSection() {
     return Row(
       children: [
-        Expanded(child: _buildImagePickerItem('Mặt trước', _frontImage, () => _pickImage(true))),
+        Expanded(
+            child: _buildImagePickerItem(
+                'Mặt trước', _frontImage, () => _pickImage(true))),
         const SizedBox(width: 16),
-        Expanded(child: _buildImagePickerItem('Mặt sau', _backImage, () => _pickImage(false))),
+        Expanded(
+            child: _buildImagePickerItem(
+                'Mặt sau', _backImage, () => _pickImage(false))),
       ],
     );
   }
 
   /// Từng khung chọn ảnh riêng lẻ
-  Widget _buildImagePickerItem(String label, File? imageFile, VoidCallback onTap) {
+  Widget _buildImagePickerItem(
+      String label, File? imageFile, VoidCallback onTap) {
     return Column(
       children: [
         GestureDetector(
@@ -271,9 +295,12 @@ class _AddTenantViewState extends State<AddTenantView> {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.add_a_photo_outlined, color: primaryBlue, size: 32),
+                      const Icon(Icons.add_a_photo_outlined,
+                          color: primaryBlue, size: 32),
                       const SizedBox(height: 8),
-                      Text(label, style: const TextStyle(fontSize: 12, color: mutedText)),
+                      Text(label,
+                          style:
+                              const TextStyle(fontSize: 12, color: mutedText)),
                     ],
                   )
                 : ClipRRect(
@@ -283,7 +310,9 @@ class _AddTenantViewState extends State<AddTenantView> {
           ),
         ),
         if (imageFile != null)
-          TextButton(onPressed: onTap, child: const Text('Chụp lại', style: TextStyle(fontSize: 12))),
+          TextButton(
+              onPressed: onTap,
+              child: const Text('Chụp lại', style: TextStyle(fontSize: 12))),
       ],
     );
   }
@@ -321,7 +350,8 @@ class _AddTenantViewState extends State<AddTenantView> {
                     color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.qr_code_scanner_rounded, color: Colors.white, size: 28),
+                  child: const Icon(Icons.qr_code_scanner_rounded,
+                      color: Colors.white, size: 28),
                 ),
                 const SizedBox(width: 14),
                 const Expanded(
@@ -333,12 +363,16 @@ class _AddTenantViewState extends State<AddTenantView> {
                           Expanded(
                             child: Text(
                               'Quét mã QR CCCD gắn chip',
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           SizedBox(width: 6),
-                          Icon(Icons.bolt, color: Colors.yellowAccent, size: 16),
+                          Icon(Icons.bolt,
+                              color: Colors.yellowAccent, size: 16),
                         ],
                       ),
                       SizedBox(height: 4),
@@ -366,7 +400,8 @@ class _AddTenantViewState extends State<AddTenantView> {
       decoration: BoxDecoration(
         color: AppColors.mintBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryGreen.withValues(alpha: 0.2)),
+        border:
+            Border.all(color: AppColors.primaryGreen.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,16 +412,22 @@ class _AddTenantViewState extends State<AddTenantView> {
               SizedBox(width: 8),
               Text(
                 'Dữ liệu trích xuất từ thẻ CCCD',
-                style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryGreen, fontSize: 13),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryGreen,
+                    fontSize: 13),
               ),
             ],
           ),
           const Divider(height: 20),
-          _buildInfoRow('Ngày sinh', cccd.birthDate.isNotEmpty ? cccd.birthDate : 'Chưa rõ'),
+          _buildInfoRow('Ngày sinh',
+              cccd.birthDate.isNotEmpty ? cccd.birthDate : 'Chưa rõ'),
           const SizedBox(height: 6),
-          _buildInfoRow('Giới tính', cccd.gender.isNotEmpty ? cccd.gender : 'Chưa rõ'),
+          _buildInfoRow(
+              'Giới tính', cccd.gender.isNotEmpty ? cccd.gender : 'Chưa rõ'),
           const SizedBox(height: 6),
-          _buildInfoRow('Nơi thường trú', cccd.address.isNotEmpty ? cccd.address : 'Chưa rõ'),
+          _buildInfoRow('Nơi thường trú',
+              cccd.address.isNotEmpty ? cccd.address : 'Chưa rõ'),
           if (cccd.cmndNumber != null) ...[
             const SizedBox(height: 6),
             _buildInfoRow('Số CMND cũ', cccd.cmndNumber!),
@@ -402,10 +443,15 @@ class _AddTenantViewState extends State<AddTenantView> {
       children: [
         SizedBox(
           width: 100,
-          child: Text(label, style: const TextStyle(fontSize: 12, color: mutedText)),
+          child: Text(label,
+              style: const TextStyle(fontSize: 12, color: mutedText)),
         ),
         Expanded(
-          child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87)),
+          child: Text(value,
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87)),
         ),
       ],
     );
@@ -415,7 +461,8 @@ class _AddTenantViewState extends State<AddTenantView> {
   Widget _buildSubmitButton() {
     return BlocBuilder<TenantBloc, TenantState>(
       builder: (context, state) {
-        final bool isLoading = state is TenantLoading || state is TenantUploadingImage;
+        final bool isLoading =
+            state is TenantLoading || state is TenantUploadingImage;
 
         return SizedBox(
           width: double.infinity,
@@ -425,19 +472,26 @@ class _AddTenantViewState extends State<AddTenantView> {
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryBlue,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               elevation: 0,
             ),
             child: isLoading
                 ? const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+                      SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2)),
                       SizedBox(width: 12),
                       Text('Đang xử lý hồ sơ...'),
                     ],
                   )
-                : const Text('LƯU HỒ SƠ KHÁCH THUÊ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                : const Text('LƯU HỒ SƠ KHÁCH THUÊ',
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           ),
         );
       },

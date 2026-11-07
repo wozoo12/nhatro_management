@@ -37,15 +37,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<RoomRepository>(create: (_) => RoomRepository(supabase)),
-        RepositoryProvider<TenantRepository>(create: (_) => TenantRepository(supabase)),
-        RepositoryProvider<InvoiceRepository>(create: (_) => InvoiceRepository(supabase)),
+        RepositoryProvider<RoomRepository>(
+            create: (_) => RoomRepository(supabase)),
+        RepositoryProvider<TenantRepository>(
+            create: (_) => TenantRepository(supabase)),
+        RepositoryProvider<InvoiceRepository>(
+            create: (_) => InvoiceRepository(supabase)),
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<RoomBloc>(create: (context) => RoomBloc(context.read<RoomRepository>())),
-          BlocProvider<TenantBloc>(create: (context) => TenantBloc(context.read<TenantRepository>())),
-          BlocProvider<InvoiceBloc>(create: (context) => InvoiceBloc(context.read<InvoiceRepository>())),
+          BlocProvider<RoomBloc>(
+              create: (context) => RoomBloc(context.read<RoomRepository>())),
+          BlocProvider<TenantBloc>(
+              create: (context) =>
+                  TenantBloc(context.read<TenantRepository>())),
+          BlocProvider<InvoiceBloc>(
+              create: (context) =>
+                  InvoiceBloc(context.read<InvoiceRepository>())),
         ],
         child: MaterialApp(
           title: 'LOZIDO',

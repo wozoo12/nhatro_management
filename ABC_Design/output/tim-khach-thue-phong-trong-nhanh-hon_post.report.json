@@ -1,0 +1,33 @@
+{
+  "title": "Tìm khách thuê phòng trống nhanh hơn",
+  "theme": "leads",
+  "checks": [
+    [
+      "fix",
+      "Tiêu đề viết HOA toàn bộ → đổi về viết hoa đầu câu"
+    ],
+    [
+      "ok",
+      "Độ dài tiêu đề 36/80 ký tự"
+    ],
+    [
+      "ok",
+      "Chủ đề: leads (khớp: tim khach, phong trong)"
+    ],
+    [
+      "ok",
+      "Dàn chữ: 3 dòng, cỡ 96px, căn trái, lề 80px"
+    ],
+    [
+      "ok",
+      "Tương phản tiêu đề 13.9:1"
+    ],
+    [
+      "ok",
+      "Tương phản chữ trên ô phòng thấp nhất 5.0:1"
+    ]
+  ],
+  "files": [
+    "/mnt/user-data/outputs/ABC_Design/output/tim-khach-thue-phong-trong-nhanh-hon_post.png"
+  ]
+}

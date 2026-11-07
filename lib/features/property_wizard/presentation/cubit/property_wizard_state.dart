@@ -37,6 +37,9 @@ class PropertyWizardState extends Equatable {
   final double longitude;
   final String address;
 
+  // Ảnh nhà trọ
+  final String? coverImagePath;
+
   // Validation Errors
   final String? propertyNameError;
   final String? roomCountError;
@@ -69,6 +72,7 @@ class PropertyWizardState extends Equatable {
     this.latitude = 0,
     this.longitude = 0,
     this.address = '',
+    this.coverImagePath,
     this.propertyNameError,
     this.roomCountError,
     this.areaError,
@@ -101,6 +105,8 @@ class PropertyWizardState extends Equatable {
     double? latitude,
     double? longitude,
     String? address,
+    String? coverImagePath,
+    bool clearCoverImage = false,
     String? propertyNameError,
     String? roomCountError,
     String? areaError,
@@ -136,6 +142,7 @@ class PropertyWizardState extends Equatable {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       address: address ?? this.address,
+      coverImagePath: clearCoverImage ? null : (coverImagePath ?? this.coverImagePath),
       propertyNameError: clearPropertyNameError ? null : (propertyNameError ?? this.propertyNameError),
       roomCountError: clearRoomCountError ? null : (roomCountError ?? this.roomCountError),
       areaError: clearAreaError ? null : (areaError ?? this.areaError),
@@ -170,6 +177,7 @@ class PropertyWizardState extends Equatable {
         latitude,
         longitude,
         address,
+        coverImagePath,
         propertyNameError,
         roomCountError,
         areaError,
